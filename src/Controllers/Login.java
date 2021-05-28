@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.User;
+import Utilities.Database.UserDaoImpl;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Login {
 
@@ -77,21 +79,17 @@ public class Login {
 
             newStage.show();
         } catch (NoSuchElementException ex) {
+            //TODO: Log unsuccessful login attempt
             errorMessageTxt.setText("Username/Password is incorrect");
         }
 
-        //TODO: Close current scene if user is found in DB
-        //TODO: If A user is not in DB then, send error to scene
-        //TODO: Log unsuccessful login attempt
     }
 
-    private User getUser(String username, String password) {
-        //TODO: Call to DB to get user
-        // if User exists pass back user,
-        // else throw an error
-        User user = new User();
-        user.setUsername(username);
-        return user;
+    private User getUser(String username, String password) throws NoSuchElementException {
+        UserDaoImpl userDao = new UserDaoImpl();
+        Optional<User> user = userDao.getUserByUserNameAndPassword(username, password);
+
+        return user.orElseThrow();
     }
 
     @FXML

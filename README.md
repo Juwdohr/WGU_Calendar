@@ -1,6 +1,6 @@
 # WGU Calendar
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Juwdohr/WGU_Calendar/blob/master/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/Naereen/StrapDown.js.svg)](https://GitHub.com/Juwdohr/WGU_Calendar/releases/)\
+[![GitHub release](https://img.shields.io/github/release/Naereen/StrapDown.js.svg)](https://GitHub.com/Juwdohr/WGU_Calendar/releases/)
 [![GitHub contributors](https://img.shields.io/github/contributors/Naereen/badges.svg)](https://github.com/Juwdohr/WGU_Calendar/graphs/contributors/)
 
 

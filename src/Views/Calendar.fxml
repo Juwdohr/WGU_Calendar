@@ -85,7 +85,7 @@
          <items>
             <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
                <children>
-                  <Label text="[username]" textFill="#9f9f9f" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+                  <Label fx:id="usernameLbl" text="[username]" textFill="#9f9f9f" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
                      <font>
                         <Font size="18.0" />
                      </font>

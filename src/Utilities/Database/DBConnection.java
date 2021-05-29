@@ -1,12 +1,13 @@
 package Utilities.Database;
 
-import com.mysql.jdbc.Driver;
+import com.mysql.cj.jdbc.Driver;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    public static final String URL = "jdbc:mysql://wgudb.ucertify.com::3306/WJJ07okc";
+    public static final String URL = "jdbc:mysql://wgudb.ucertify.com:3306/WJ07okc";
     public static final String USER = "U07okc";
     public static final String PASSWORD = "53689087951";
 

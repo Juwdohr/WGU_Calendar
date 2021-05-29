@@ -69,7 +69,7 @@ public class UserDaoImpl implements UserDao{
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE User_Name=? AND Password=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE User_Name=? AND Password=?");
             statement.setString(1, username);
             statement.setString(2, password);
             ResultSet results = statement.executeQuery();
@@ -89,7 +89,7 @@ public class UserDaoImpl implements UserDao{
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO users VALUES (NULL, ?, ?, ?, ?, ?, ?)");
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getCreated().toString());
@@ -113,7 +113,7 @@ public class UserDaoImpl implements UserDao{
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE user SET User_Name=?, Password=?, Create_Date=?, Created_By=?, Last_Update=?, Last_Updated_By=? WHERE User_ID=?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE users SET User_Name=?, Password=?, Create_Date=?, Created_By=?, Last_Update=?, Last_Updated_By=? WHERE User_ID=?");
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getCreated().toString());

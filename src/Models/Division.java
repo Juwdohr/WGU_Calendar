@@ -4,31 +4,31 @@ import java.sql.Date;
 
 public class Division {
     private int divisionId;
-    private String division;
+    private String divisionName;
     private Date created;
     private String createdBy;
     private Date lastUpdated;
     private String lastUpdatedBy;
-    private Country country;
+    private int countryId;
 
     public Division() {
         this.divisionId = -1;
-        this.division = null;
+        this.divisionName = null;
         this.created = null;
         this.createdBy = null;
         this.lastUpdated = null;
         this.lastUpdatedBy = null;
-        this.country = null;
+        this.countryId = -1;
     }
 
-    public Division(int divisionId, String division, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy, Country country) {
+    public Division(int divisionId, String divisionName, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy, int countryId) {
         this.divisionId = divisionId;
-        this.division = division;
+        this.divisionName = divisionName;
         this.created = created;
         this.createdBy = createdBy;
         this.lastUpdated = lastUpdated;
         this.lastUpdatedBy = lastUpdatedBy;
-        this.country = country;
+        this.countryId = countryId;
     }
 
     public int getDivisionId() {
@@ -39,12 +39,12 @@ public class Division {
         this.divisionId = divisionId;
     }
 
-    public String getDivision() {
-        return division;
+    public String getDivisionName() {
+        return divisionName;
     }
 
-    public void setDivision(String division) {
-        this.division = division;
+    public void setDivisionName(String divisionName) {
+        this.divisionName = divisionName;
     }
 
     public Date getCreated() {
@@ -79,11 +79,11 @@ public class Division {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public Country getCountry() {
-        return country;
+    public int getCountryId() {
+        return countryId;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 }

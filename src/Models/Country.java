@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Country {
     private int countryId;
-    private String country;
+    private String countryName;
     private Date created;
     private String createdBy;
     private Date lastUpdated;
@@ -12,16 +12,16 @@ public class Country {
 
     public Country() {
         this.countryId = -1;
-        this.country = null;
+        this.countryName = null;
         this.created = null;
         this.createdBy = null;
         this.lastUpdated = null;
         this.lastUpdatedBy = null;
     }
 
-    public Country(int countryId, String country, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy) {
+    public Country(int countryId, String countryName, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy) {
         this.countryId = countryId;
-        this.country = country;
+        this.countryName = countryName;
         this.created = created;
         this.createdBy = createdBy;
         this.lastUpdated = lastUpdated;
@@ -36,12 +36,12 @@ public class Country {
         this.countryId = countryId;
     }
 
-    public String getCountry() {
-        return country;
+    public String getCountryName() {
+        return countryName;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 
     public Date getCreated() {

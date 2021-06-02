@@ -56,9 +56,9 @@
    <children>
       <MenuBar VBox.vgrow="NEVER">
          <menus>
-            <Menu mnemonicParsing="false" text="File">
+            <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                <items>
-                  <Menu mnemonicParsing="false" text="Add...">
+                  <Menu fx:id="addMenu" mnemonicParsing="false" text="Add...">
                      <items>
                         <MenuItem fx:id="newAppointmentMenuItem" mnemonicParsing="false" text="Appointment" />
                         <MenuItem fx:id="newCustomerMenuItem" mnemonicParsing="false" text="Customer" />
@@ -68,13 +68,13 @@
                   <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
+            <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
                <items>
                   <MenuItem fx:id="editAppointmentMenuItem" mnemonicParsing="false" text="Appointment" />
-                  <MenuItem fx:id="editCustomerMenuItem" mnemonicParsing="false" text="Customer" />
+                  <MenuItem fx:id="editCustomerMenuItem" mnemonicParsing="false" onAction="#updateCustomer" text="Customer" />
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Help">
+            <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About Calendar" />
                </items>
@@ -95,13 +95,13 @@
                         <MenuButton fx:id="addMenuButton" mnemonicParsing="false" text="New">
                            <items>
                               <MenuItem fx:id="addAppointmentMenuItem" mnemonicParsing="false" text="Appointment" />
-                              <MenuItem fx:id="addCustomerMenuItem" mnemonicParsing="false" text="Customer" />
+                              <MenuItem fx:id="addCustomerMenuItem" mnemonicParsing="false" onAction="#addCustomer" text="Customer" />
                            </items>
                         </MenuButton>
                         <MenuButton fx:id="updateMenuButton" mnemonicParsing="false" text="Update">
                            <items>
                               <MenuItem fx:id="updateAppointmentMenuItem" mnemonicParsing="false" text="Appointment" />
-                              <MenuItem fx:id="updateCustomerMenuItem" mnemonicParsing="false" text="Customer" />
+                              <MenuItem fx:id="updateCustomerMenuItem" mnemonicParsing="false" onAction="#updateCustomer" text="Customer" />
                            </items>
                         </MenuButton>
                      </buttons>

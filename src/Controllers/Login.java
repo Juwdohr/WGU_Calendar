@@ -55,9 +55,7 @@ public class Login {
 
     @FXML
     void LoginUser() throws IOException {
-        //TODO: Check user table in DB for user
         try {
-            //TODO: iff A user is in DB then, create new root scene and pass user
             //TODO: Log successful login
             User user = getUser(usernameTxtfield.getText(), passwordTxtfield.getText());
 

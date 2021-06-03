@@ -11,6 +11,7 @@ import Models.Country;
 import Models.Customer;
 import Models.Division;
 import Models.User;
+import Utilities.Database.CustomerDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -204,9 +205,12 @@ public class Calendar {
 
     private void loadCustomers() {
         loadingLbl.setText("Loading Customers...");
-        //TODO: Get customers from databasex
-        Customer customer = new Customer(customers.size(), "Joshua Dix", "1155 E 1080 S #214, Provo", "84606", "801-919-6457", 1, Date.valueOf(LocalDate.now()), "Joshua Dix", Date.valueOf(LocalDate.now()), "Joshua Dix");
-        customers.add(customer);
+
+        CustomerDao customerDao = new CustomerDao();
+        ObservableList<Customer> customerList = customerDao.getAll();
+
+        customers.addAll(customerList);
+
         loadingLbl.setText("");
     }
 

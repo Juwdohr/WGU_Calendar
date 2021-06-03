@@ -3,6 +3,10 @@ package Controllers;
 import Models.Country;
 import Models.Customer;
 import Models.Division;
+import Models.User;
+import Utilities.Database.CountryDao;
+import Utilities.Database.DivisionsDao;
+import Utilities.Database.UserDaoImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +18,7 @@ import javafx.util.Callback;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class CustomerDetails {
@@ -72,7 +77,7 @@ public class CustomerDetails {
     }
 
     @FXML
-    void close(ActionEvent event) {
+    void close(ActionEvent event)  {
         //TODO: Alert for closing scene.
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
@@ -122,7 +127,6 @@ public class CustomerDetails {
             }
         });
 
-        countryComboBox.getSelectionModel().clearSelection();
         countryComboBox.setItems(countries);
         countryComboBox.setCellFactory(new Callback<>() {
             @Override
@@ -165,15 +169,15 @@ public class CustomerDetails {
     }
 
     private void loadCountries() {
-        //TODO: Load countries from DB
-        Country country = new Country(1, "United States", Date.valueOf(LocalDate.now()), "Joshua Dix", Date.valueOf(LocalDate.now()), "Joshua Dix");
-        countries.add(country);
+        CountryDao countryDao = new CountryDao();
+        ObservableList<Country> countryList = countryDao.getAll();
+        countries.addAll(countryList);
     }
 
     private void loadDivisions() {
-        //TODO: Load Divisions from DB
-        Division division = new Division(1, "Utah", Date.valueOf(LocalDate.now()), "Joshua Dix", Date.valueOf(LocalDate.now()), "Joshua Dix", 1);
-        divisions.add(division);
+        DivisionsDao divisionDao = new DivisionsDao();
+        ObservableList<Division> divisionList = divisionDao.getAll();
+        divisions.addAll(divisionList);
     }
 
     private void loadCustomer() {
@@ -181,15 +185,15 @@ public class CustomerDetails {
             customerIdTextField.setText(String.valueOf(customer.getCustomerId()));
             customerNameTextField.setText(customer.getCustomerName());
             customerAddressTextField.setText(customer.getAddress());
-            // TODO: Set Country, and Division based on Division form customer.
+            // TODO: Set Country, and Division based on Division from customer.
             for (Division division: divisions) {
                 if(division.getDivisionId() != customer.getDivisionId()) continue;
-
+                System.out.println("DivisionID: " + division.getDivisionId() + ", CustomerID: " + customer.getCustomerId());
                 stateProvinceComboBox.setValue(division);
 
                 for(Country country:countries) {
                     if (country.getCountryId() != division.getCountryId()) continue;
-
+                    System.out.println("DivisionID: " + division.getCountryId() + ", CountryID: " + country.getCountryId());
                     countryComboBox.setValue(country);
                 }
             }

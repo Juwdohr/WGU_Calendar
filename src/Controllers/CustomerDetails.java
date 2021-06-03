@@ -3,10 +3,8 @@ package Controllers;
 import Models.Country;
 import Models.Customer;
 import Models.Division;
-import Models.User;
 import Utilities.Database.CountryDao;
 import Utilities.Database.DivisionsDao;
-import Utilities.Database.UserDaoImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,7 +16,6 @@ import javafx.util.Callback;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class CustomerDetails {
@@ -127,6 +124,7 @@ public class CustomerDetails {
             }
         });
 
+
         countryComboBox.setItems(countries);
         countryComboBox.setCellFactory(new Callback<>() {
             @Override
@@ -157,6 +155,18 @@ public class CustomerDetails {
                 }
             }
         });
+        countryComboBox.setOnAction(event -> {
+            int countryId = countryComboBox.getSelectionModel().getSelectedItem().getCountryId();
+            ObservableList<Division> filteredDivisions = FXCollections.observableArrayList();
+
+            for(Division division : divisions) {
+                if(division.getCountryId() == countryId) {
+                    filteredDivisions.add(division);
+                }
+            }
+
+            stateProvinceComboBox.setItems(filteredDivisions);
+        });
     }
 
     public void initializeData(Customer customer, Consumer<Customer> onComplete) {
@@ -185,7 +195,8 @@ public class CustomerDetails {
             customerIdTextField.setText(String.valueOf(customer.getCustomerId()));
             customerNameTextField.setText(customer.getCustomerName());
             customerAddressTextField.setText(customer.getAddress());
-            // TODO: Set Country, and Division based on Division from customer.
+            postalCodeTextField.setText(customer.getPostalCode());
+
             for (Division division: divisions) {
                 if(division.getDivisionId() != customer.getDivisionId()) continue;
                 System.out.println("DivisionID: " + division.getDivisionId() + ", CustomerID: " + customer.getCustomerId());
@@ -197,7 +208,6 @@ public class CustomerDetails {
                     countryComboBox.setValue(country);
                 }
             }
-            postalCodeTextField.setText(customer.getPostalCode());
         }
     }
 }

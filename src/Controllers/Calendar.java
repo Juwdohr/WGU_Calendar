@@ -1,15 +1,6 @@
 package Controllers;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-import java.util.function.Consumer;
-
-import Models.Country;
 import Models.Customer;
-import Models.Division;
 import Models.User;
 import Utilities.Database.CustomerDao;
 import javafx.collections.FXCollections;
@@ -26,18 +17,13 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
+import java.util.function.Consumer;
+
 public class Calendar {
 
     private User currentUser;
-    private ObservableList<Customer> customers = FXCollections.observableArrayList();
-    private ObservableList<Country>  countries= FXCollections.observableArrayList();
-    private ObservableList<Division> divisions = FXCollections.observableArrayList();
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
+    private final ObservableList<Customer> customers = FXCollections.observableArrayList();
 
     @FXML
     private Menu fileMenu;
@@ -149,7 +135,7 @@ public class Calendar {
     }
 
     @FXML
-    void addCustomer(ActionEvent event) throws IOException {
+    void addCustomer() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../Views/CustomerDetails.fxml"));
         Parent newRoot = loader.load();
@@ -173,7 +159,7 @@ public class Calendar {
     }
 
     @FXML
-    void updateCustomer(ActionEvent event) throws IOException {
+    void updateCustomer() throws IOException {
         Customer customer = customerListView.getSelectionModel().getSelectedItem();
         if(customer != null) {
             FXMLLoader loader = new FXMLLoader();
@@ -223,8 +209,6 @@ public class Calendar {
         usernameLbl.setText(currentUser.getUsername());
         loadingLbl.setText("");
     }
-
-
 }
 
 

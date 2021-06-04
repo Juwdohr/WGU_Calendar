@@ -20,6 +20,11 @@ import java.util.function.Consumer;
 
 public class CustomerDetails {
 
+    private Customer customer = null;
+    private Consumer<Customer> onComplete;
+    private final ObservableList<Country> countries = FXCollections.observableArrayList();
+    private final ObservableList<Division> divisions = FXCollections.observableArrayList();
+
     @FXML
     private Text customerDetailsTitle;
 
@@ -36,6 +41,9 @@ public class CustomerDetails {
     private TextField customerAddressTextField;
 
     @FXML
+    private TextField phoneNumber;
+
+    @FXML
     private ComboBox<Country> countryComboBox;
 
     @FXML
@@ -50,11 +58,6 @@ public class CustomerDetails {
     @FXML
     private Button cancelBtn;
 
-    private Customer customer = null;
-    private Consumer<Customer> onComplete;
-    private ObservableList<Country> countries = FXCollections.observableArrayList();
-    private ObservableList<Division> divisions = FXCollections.observableArrayList();
-
     @FXML
     void addCustomer() {
         if (customer == null)
@@ -64,6 +67,7 @@ public class CustomerDetails {
         customer.setAddress(customerAddressTextField.getText());
         customer.setDivisionId(stateProvinceComboBox.getValue().getDivisionId());
         customer.setPostalCode(postalCodeTextField.getText());
+        customer.setPhone(phoneNumber.getText());
         customer.setCreated(Date.valueOf(LocalDate.now()));
         customer.setLastUpdated(Date.valueOf(LocalDate.now()));
 
@@ -196,6 +200,7 @@ public class CustomerDetails {
             customerNameTextField.setText(customer.getCustomerName());
             customerAddressTextField.setText(customer.getAddress());
             postalCodeTextField.setText(customer.getPostalCode());
+            phoneNumber.setText(customer.getPhone());
 
             for (Division division: divisions) {
                 if(division.getDivisionId() != customer.getDivisionId()) continue;

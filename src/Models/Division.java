@@ -1,13 +1,14 @@
 package Models;
 
-import java.sql.Date;
+
+import java.sql.Timestamp;
 
 public class Division {
     private int divisionId;
     private String divisionName;
-    private Date created;
+    private Timestamp created;
     private String createdBy;
-    private Date lastUpdated;
+    private Timestamp lastUpdated;
     private String lastUpdatedBy;
     private int countryId;
 
@@ -21,7 +22,7 @@ public class Division {
         this.countryId = -1;
     }
 
-    public Division(int divisionId, String divisionName, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy, int countryId) {
+    public Division(int divisionId, String divisionName, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy, int countryId) {
         this.divisionId = divisionId;
         this.divisionName = divisionName;
         this.created = created;
@@ -47,11 +48,11 @@ public class Division {
         this.divisionName = divisionName;
     }
 
-    public Date getCreated() {
+    public Timestamp getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(Timestamp created) {
         this.created = created;
     }
 
@@ -63,11 +64,11 @@ public class Division {
         this.createdBy = createdBy;
     }
 
-    public Date getLastUpdated() {
+    public Timestamp getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
+    public void setLastUpdated(Timestamp lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

@@ -1,29 +1,36 @@
 package Controllers;
 
+import Models.Appointment;
 import Models.Customer;
 import Models.User;
 import Utilities.Database.CustomerDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.function.Consumer;
 
 public class Calendar {
 
     private User currentUser;
+    private DatePicker datePicker = new DatePicker();
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
+    private final ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
     @FXML
     private Menu fileMenu;
@@ -77,7 +84,7 @@ public class Calendar {
     private MenuItem updateCustomerMenuItem;
 
     @FXML
-    private GridPane calendarGrid;
+    private StackPane calendar = new StackPane();
 
     @FXML
     private ListView<Customer> customerListView;
@@ -113,7 +120,7 @@ public class Calendar {
         assert updateMenuButton != null : "fx:id=\"updateMenuButton\" was not injected: check your FXML file 'Calendar.fxml'.";
         assert updateAppointmentMenuItem != null : "fx:id=\"updateAppointmentMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
         assert updateCustomerMenuItem != null : "fx:id=\"updateCustomerMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert calendarGrid != null : "fx:id=\"calendarGrid\" was not injected: check your FXML file 'Calendar.fxml'.";
+        assert calendar != null : "fx:id=\"calendar\" was not injected: check your FXML file 'Calendar.fxml'.";
         assert customerListView != null : "fx:id=\"customerListView\" was not injected: check your FXML file 'Calendar.fxml'.";
         assert loadingLbl != null : "fx:id=\"loadingLbl\" was not injected: check your FXML file 'Calendar.fxml'.";
         assert x3 != null : "fx:id=\"x3\" was not injected: check your FXML file 'Calendar.fxml'.";
@@ -207,6 +214,7 @@ public class Calendar {
         this.currentUser = user;
         loadCustomers();
         usernameLbl.setText(currentUser.getUsername());
+        calendar.getChildren().addAll(datePicker);
         loadingLbl.setText("");
     }
 }

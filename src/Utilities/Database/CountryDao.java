@@ -62,6 +62,11 @@ public class CountryDao implements DAO<Country> {
     }
 
     @Override
+    public ObservableList<Country> getAll(int userId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean insert(Country country) {
         Connection connection = DBConnection.getConnection();
 

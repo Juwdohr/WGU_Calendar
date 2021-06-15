@@ -60,6 +60,11 @@ public class DivisionsDao implements DAO<Division>{
     }
 
     @Override
+    public ObservableList<Division> getAll(int userId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean insert(Division division) {
         Connection connection = DBConnection.getConnection();
         try {

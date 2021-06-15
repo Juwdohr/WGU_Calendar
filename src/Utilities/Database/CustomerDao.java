@@ -5,7 +5,6 @@ import Models.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.lang.ref.PhantomReference;
 import java.sql.*;
 import java.util.Optional;
 
@@ -68,6 +67,11 @@ public class CustomerDao implements DAO<Customer>{
         }
 
         return null;
+    }
+
+    @Override
+    public ObservableList<Customer> getAll(int userId) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

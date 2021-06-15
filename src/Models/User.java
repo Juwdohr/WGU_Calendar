@@ -1,23 +1,20 @@
 package Models;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class User {
     private int id;
     private String username;
-    private String password;
-    private Date created;
+    private Timestamp created;
     private String createdBy;
-    private Date lastUpdated;
+    private Timestamp lastUpdated;
     private String lastUpdatedBy;
 
     public User() {
     }
-
-    public User(int id, String username, String password, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy) {
+    public User(int id, String username, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.created = created;
         this.createdBy = createdBy;
         this.lastUpdated = lastUpdated;
@@ -40,19 +37,11 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Date getCreated() {
+    public Timestamp getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(Timestamp created) {
         this.created = created;
     }
 
@@ -64,11 +53,11 @@ public class User {
         this.createdBy = createdBy;
     }
 
-    public Date getLastUpdated() {
+    public Timestamp getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
+    public void setLastUpdated(Timestamp lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

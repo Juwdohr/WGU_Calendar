@@ -2,8 +2,11 @@ package Controllers;
 
 import Models.User;
 import Utilities.Database.UserDaoImpl;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.print.PageLayout;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,16 +18,22 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.time.ZoneId;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Login {
 
-    Stage stage;
-    Parent scene;
+    private final static Locale CURRENTLOCALE = Locale.getDefault();
+    private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
+    private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENTLOCALE);
 
     @FXML
     private Text programTitle;
@@ -49,7 +58,7 @@ public class Login {
 
     @FXML
     void CloseApplication() {
-        stage = (Stage) closeBtn.getScene().getWindow();
+        Stage stage = (Stage) closeBtn.getScene().getWindow();
         stage.close();
     }
 
@@ -58,7 +67,7 @@ public class Login {
         try {
             //TODO: Log successful login
             User user = getUser(usernameTxtfield.getText(), passwordTxtfield.getText());
-
+            LOGGER.log(Level.INFO, user.getUsername() + " logged in successfully");
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("../Views/Calendar.fxml"));
             Parent newRoot = loader.load();
@@ -71,23 +80,17 @@ public class Login {
             newStage.setTitle("Calendar");
             newStage.setResizable(true);
             newStage.initStyle(StageStyle.DECORATED);
+            newStage.setOnCloseRequest(windowEvent -> Platform.exit());
 
             Stage currentStage = (Stage) loginBtn.getScene().getWindow();
             currentStage.close();
 
             newStage.show();
         } catch (NoSuchElementException ex) {
-            //TODO: Log unsuccessful login attempt
-            errorMessageTxt.setText("Username/Password is incorrect");
+            LOGGER.log(Level.INFO, usernameTxtfield.getText() + " attempted to login.");
+            errorMessageTxt.setText(MESSAGES.getString("LoginError"));
         }
 
-    }
-
-    private User getUser(String username, String password) throws NoSuchElementException {
-        UserDaoImpl userDao = new UserDaoImpl();
-        Optional<User> user = userDao.getUserByUserNameAndPassword(username, password);
-
-        return user.orElseThrow();
     }
 
     @FXML
@@ -101,7 +104,9 @@ public class Login {
         assert errorMessageTxt != null : "fx:id=\"errorMessageTxt\" was not injected: check your FXML file 'Login.fxml'.";
         errorMessageTxt.setText("");
         //TODO: Internationalize programTitle
-        programTitle.setText("Calendar");
+        programTitle.setText(MESSAGES.getString("Title"));
+        usernameTxtfield.setPromptText(MESSAGES.getString("UsernamePrompt"));
+        passwordTxtfield.setPromptText(MESSAGES.getString("PasswordPrompt"));
         zoneIdLbl.setText(ZoneId.systemDefault().toString());
 
         //Allows a user press the enter key to login to application.
@@ -132,5 +137,12 @@ public class Login {
                 }
             }
         });
+    }
+
+    private User getUser(String username, String password) throws NoSuchElementException {
+        UserDaoImpl userDao = new UserDaoImpl();
+        Optional<User> user = userDao.getUserByUserNameAndPassword(username, password);
+
+        return user.orElseThrow();
     }
 }

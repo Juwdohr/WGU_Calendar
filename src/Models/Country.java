@@ -1,13 +1,13 @@
 package Models;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Country {
     private int countryId;
     private String countryName;
-    private Date created;
+    private Timestamp created;
     private String createdBy;
-    private Date lastUpdated;
+    private Timestamp lastUpdated;
     private String lastUpdatedBy;
 
     public Country() {
@@ -19,7 +19,7 @@ public class Country {
         this.lastUpdatedBy = null;
     }
 
-    public Country(int countryId, String countryName, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy) {
+    public Country(int countryId, String countryName, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
         this.countryId = countryId;
         this.countryName = countryName;
         this.created = created;
@@ -44,11 +44,11 @@ public class Country {
         this.countryName = countryName;
     }
 
-    public Date getCreated() {
+    public Timestamp getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(Timestamp created) {
         this.created = created;
     }
 
@@ -60,11 +60,11 @@ public class Country {
         this.createdBy = createdBy;
     }
 
-    public Date getLastUpdated() {
+    public Timestamp getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
+    public void setLastUpdated(Timestamp lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

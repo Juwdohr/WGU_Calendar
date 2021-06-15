@@ -20,9 +20,9 @@ public class CustomerDao implements DAO<Customer>{
         customer.setDivisionId(results.getInt("Division_ID"));
         customer.setPostalCode(results.getString("Postal_Code"));
         customer.setPhone(results.getString("Phone"));
-        customer.setCreated(results.getDate("Create_Date"));
+        customer.setCreated(results.getTimestamp("Create_Date"));
         customer.setCreatedBy(results.getString("Created_By"));
-        customer.setLastUpdated(results.getDate("Last_Update"));
+        customer.setLastUpdated(results.getTimestamp("Last_Update"));
         customer.setLastUpdatedBy(results.getString("Last_Updated_By"));
 
         return customer;

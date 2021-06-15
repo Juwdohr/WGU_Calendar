@@ -1,6 +1,6 @@
 package Models;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Customer {
     private int customerId;
@@ -9,9 +9,9 @@ public class Customer {
     private String postalCode;
     private String phone;
     private int divisionId;
-    private Date created;
+    private Timestamp created;
     private String createdBy;
-    private Date lastUpdated;
+    private Timestamp lastUpdated;
     private String lastUpdatedBy;
 
     public Customer() {
@@ -27,7 +27,7 @@ public class Customer {
         this.lastUpdatedBy = null;
     }
 
-    public Customer(String customerName, String address, String postalCode, String phone, int divisionId, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy) {
+    public Customer(String customerName, String address, String postalCode, String phone, int divisionId, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
         this.customerName = customerName;
         this.address = address;
         this.postalCode = postalCode;
@@ -39,7 +39,7 @@ public class Customer {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy) {
+    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.address = address;
@@ -100,11 +100,11 @@ public class Customer {
         this.divisionId = divisionId;
     }
 
-    public Date getCreated() {
+    public Timestamp getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(Timestamp created) {
         this.created = created;
     }
 
@@ -116,11 +116,11 @@ public class Customer {
         this.createdBy = createdBy;
     }
 
-    public Date getLastUpdated() {
+    public Timestamp getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
+    public void setLastUpdated(Timestamp lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

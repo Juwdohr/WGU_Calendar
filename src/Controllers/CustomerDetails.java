@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 public class CustomerDetails {
@@ -68,8 +70,9 @@ public class CustomerDetails {
         customer.setDivisionId(stateProvinceComboBox.getValue().getDivisionId());
         customer.setPostalCode(postalCodeTextField.getText());
         customer.setPhone(phoneNumber.getText());
-        customer.setCreated(Date.valueOf(LocalDate.now()));
-        customer.setLastUpdated(Date.valueOf(LocalDate.now()));
+        if(customer.getCreated() == null)
+            customer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+        customer.setLastUpdated(Timestamp.valueOf(LocalDateTime.now()));
 
         onComplete.accept(customer);
 
@@ -204,12 +207,10 @@ public class CustomerDetails {
 
             for (Division division: divisions) {
                 if(division.getDivisionId() != customer.getDivisionId()) continue;
-                System.out.println("DivisionID: " + division.getDivisionId() + ", CustomerID: " + customer.getCustomerId());
                 stateProvinceComboBox.setValue(division);
 
                 for(Country country:countries) {
                     if (country.getCountryId() != division.getCountryId()) continue;
-                    System.out.println("DivisionID: " + division.getCountryId() + ", CountryID: " + country.getCountryId());
                     countryComboBox.setValue(country);
                 }
             }

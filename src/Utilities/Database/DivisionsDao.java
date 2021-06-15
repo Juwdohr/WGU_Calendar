@@ -13,9 +13,9 @@ public class DivisionsDao implements DAO<Division>{
 
         division.setDivisionId(results.getInt("Division_ID"));
         division.setDivisionName(results.getString("Division"));
-        division.setCreated(results.getDate("Create_Date"));
+        division.setCreated(results.getTimestamp("Create_Date"));
         division.setCreatedBy(results.getString("Create_Date"));
-        division.setLastUpdated(results.getDate("Last_Update"));
+        division.setLastUpdated(results.getTimestamp("Last_Update"));
         division.setLastUpdatedBy(results.getString("Last_Updated_By"));
         division.setCountryId(results.getInt("Country_ID"));
 

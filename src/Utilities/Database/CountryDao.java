@@ -13,9 +13,9 @@ public class CountryDao implements DAO<Country> {
 
         country.setCountryId(results.getInt("Country_ID"));
         country.setCountryName(results.getString("Country"));
-        country.setCreated(results.getDate("Create_Date"));
+        country.setCreated(results.getTimestamp("Create_Date"));
         country.setCreatedBy(results.getString("Created_By"));
-        country.setLastUpdated(results.getDate("Last_Update"));
+        country.setLastUpdated(results.getTimestamp("Last_Update"));
         country.setLastUpdatedBy(results.getString("Last_Updated_By"));
 
         return country;

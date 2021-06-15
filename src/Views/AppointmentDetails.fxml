@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AppointmentDetails">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="348.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AppointmentDetails">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
@@ -26,27 +26,34 @@
                   <Font size="24.0" />
                </font>
             </Text>
-            <TextField prefWidth="280.0" promptText="Title" />
-            <TextField prefWidth="280.0" promptText="Location" />
-            <ComboBox prefHeight="25.0" prefWidth="280.0" promptText="Select Contact" />
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label fx:id="appointmentIdLabel" prefHeight="17.0" prefWidth="116.0" text="Appointment ID: " />
+                  <TextField fx:id="appointmentIdTextfField" disable="true" prefHeight="25.0" prefWidth="205.0" promptText="Auto Generated" />
+               </children>
+            </HBox>
+            <TextField fx:id="appointmentTitleTextField" prefWidth="280.0" promptText="Title" />
+            <TextField fx:id="appointmentLocationTextField" prefWidth="280.0" promptText="Location" />
+            <TextField fx:id="appointmentTypeTextField" promptText="Appointment Type" />
+            <ComboBox fx:id="contactComboBox" prefHeight="25.0" prefWidth="337.0" promptText="Select Contact" />
             <HBox prefHeight="25.0" prefWidth="280.0" spacing="10.0">
                <children>
-                  <DatePicker prefWidth="135.0" />
-                  <DatePicker prefWidth="135.0" />
+                  <DatePicker fx:id="startDatePicker" prefWidth="165.0" promptText="Start Date" />
+                  <DatePicker fx:id="endDatePicker" prefWidth="165.0" promptText="End Date" />
                </children>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="280.0" spacing="10.0">
                <children>
-                  <ComboBox prefWidth="135.0" promptText="Start Time" />
-                  <ComboBox prefWidth="135.0" promptText="End Time" />
+                  <ComboBox fx:id="startTimePicker" prefWidth="165.0" promptText="Start Time" />
+                  <ComboBox fx:id="endTimePicker" prefWidth="165.0" promptText="End Time" />
                </children>
             </HBox>
-            <Label text="Appointment Notes:" />
-            <TextArea prefHeight="200.0" prefWidth="280.0" />
+            <Label fx:id="appointmentDescriptionLabel" text="Appointment Description:" />
+            <TextArea fx:id="appointmentDescriptionTextArea" prefHeight="200.0" prefWidth="280.0" />
             <ButtonBar prefHeight="25.0" prefWidth="280.0">
                <buttons>
-                  <Button defaultButton="true" mnemonicParsing="false" text="Submit" />
-                  <Button cancelButton="true" mnemonicParsing="false" text="Cancel" />
+                  <Button fx:id="submitAppointment" defaultButton="true" mnemonicParsing="false" onAction="#submit" text="Submit" />
+                  <Button fx:id="cancelAppointment" cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                </buttons>
             </ButtonBar>
          </children>

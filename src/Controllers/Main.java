@@ -1,5 +1,6 @@
 package Controllers;
 
+import Utilities.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,11 +9,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Main extends Application {
-
     @Override
     public void start(Stage primaryStage) throws Exception{
+        Logger.initializeLogManager();
+
         Parent root = FXMLLoader.load(getClass().getResource("../Views/Login.fxml"));
-        primaryStage.setTitle("Calendar: Login");
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
         primaryStage.initStyle(StageStyle.UNDECORATED);

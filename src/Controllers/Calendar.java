@@ -3,7 +3,10 @@ package Controllers;
 import Models.Appointment;
 import Models.Customer;
 import Models.User;
+import Utilities.Alerts;
+import Utilities.Database.AppointmentDao;
 import Utilities.Database.CustomerDao;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,6 +37,7 @@ public class Calendar {
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
     private final ObservableList<Appointment> appointments = FXCollections.observableArrayList();
     private final CustomerDao customerDao = new CustomerDao();
+    private final AppointmentDao appointmentDao = new AppointmentDao();
 
     @FXML
     private Menu fileMenu;
@@ -184,7 +188,7 @@ public class Calendar {
         appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
-        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
         appointmentStartDateTime.setCellValueFactory(new PropertyValueFactory<>("start"));
         appointmentEndDateTime.setCellValueFactory(new PropertyValueFactory<>("end"));
@@ -240,9 +244,9 @@ public class Calendar {
         Consumer<Appointment> onComplete = result -> {
             result.setCreatedBy(user.getUsername());
             result.setLastUpdateBy(user.getUsername());
-            //if(appointmentDao.insert(result)) {
-            appointments.add(result);
-            //}
+            if(appointmentDao.insert(result)) {
+                appointments.add(result);
+            }
         };
 
         controller.initializeData(null, onComplete);
@@ -284,7 +288,7 @@ public class Calendar {
 
             newStage.show();
         } else {
-            //TODO: Alert user that a customer must be selected
+            //TODO: Alerts user that a customer must be selected
             LOGGER.log(Level.INFO, "Customer not selected. Customer must be selected.");
         }
     }
@@ -301,9 +305,9 @@ public class Calendar {
             Consumer<Appointment> onComplete = result -> {
                 result.setCreatedBy(user.getUsername());
                 result.setLastUpdateBy(user.getUsername());
-                //if(appointmentDao.update(result)) {
+                if(appointmentDao.update(result)) {
                     appointments.set(appointments.indexOf(appointment), result);
-                //}
+                }
             };
 
             controller.initializeData(appointment, onComplete);
@@ -316,8 +320,15 @@ public class Calendar {
 
             newStage.show();
         } else {
-            // TODO: Alert User to Select an appiontment from the table
+            // TODO: Alerts User to Select an appiontment from the table
             LOGGER.log(Level.INFO, "Appointment not selected. Appointment must be selected.");
+        }
+    }
+
+    @FXML
+    void exitApplication() {
+        if (Alerts.confirmation(Alerts.ConfirmType.EXIT)) {
+            Platform.exit();
         }
     }
 
@@ -335,16 +346,14 @@ public class Calendar {
         loadingLbl.setText(MESSAGES.getString("LoadAppointments"));
         LOGGER.log(Level.FINE, "Started Loading Appointments");
 
-        // TODO: Load appointments from Database
-        // ObservableList<Appointment> appointmentList = appointmentDao.getAll();
-        // appointments.addAll(appointmentList);
+        ObservableList<Appointment> appointmentList = appointmentDao.getAll();
+        appointments.addAll(appointmentList);
 
         LOGGER.log(Level.FINE, "Finished Loading Appointments");
     }
 
     //Used to pass in user, and gather other data
     public void initializeData(User user) {
-        // TODO: internationalize laodingLbl
         this.user = user;
         usernameLbl.setText(this.user.getUsername());
 
@@ -355,6 +364,3 @@ public class Calendar {
         loadingLbl.setText("");
     }
 }
-
-
-

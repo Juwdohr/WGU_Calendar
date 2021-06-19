@@ -82,7 +82,7 @@ public class CustomerDetails {
 
     @FXML
     void close(ActionEvent event)  {
-        //TODO: Alert for closing scene.
+        //TODO: Alerts for closing scene.
         Stage stage = (Stage) cancelBtn.getScene().getWindow();
         stage.close();
     }

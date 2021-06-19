@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.User;
+import Utilities.Alerts;
 import Utilities.Database.UserDaoImpl;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -103,7 +104,6 @@ public class Login {
         assert closeBtn != null : "fx:id=\"closeBtn\" was not injected: check your FXML file 'Login.fxml'.";
         assert errorMessageTxt != null : "fx:id=\"errorMessageTxt\" was not injected: check your FXML file 'Login.fxml'.";
         errorMessageTxt.setText("");
-        //TODO: Internationalize programTitle
         programTitle.setText(MESSAGES.getString("Title"));
         usernameTxtfield.setPromptText(MESSAGES.getString("UsernamePrompt"));
         passwordTxtfield.setPromptText(MESSAGES.getString("PasswordPrompt"));

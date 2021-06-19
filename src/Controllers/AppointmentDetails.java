@@ -104,7 +104,7 @@ public class AppointmentDetails {
 
     @FXML
     void cancel() {
-        //TODO: Alert for canceling Add/Update Appointment
+        //TODO: Alerts for canceling Add/Update Appointment
         Stage stage = (Stage) cancelAppointment.getScene().getWindow();
         stage.close();
     }

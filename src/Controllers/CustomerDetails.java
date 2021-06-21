@@ -71,8 +71,8 @@ public class CustomerDetails {
         customer.setPostalCode(postalCodeTextField.getText());
         customer.setPhone(phoneNumber.getText());
         if(customer.getCreated() == null)
-            customer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        customer.setLastUpdated(Timestamp.valueOf(LocalDateTime.now()));
+            customer.setCreated(LocalDateTime.now());
+        customer.setLastUpdated(LocalDateTime.now());
 
         onComplete.accept(customer);
 
@@ -103,7 +103,7 @@ public class CustomerDetails {
         stateProvinceComboBox.setItems(divisions);
         stateProvinceComboBox.setCellFactory(new Callback<>() {
             @Override
-            public ListCell<Division> call(ListView<Division> listView) {
+            public ListCell<Division> call(ListView<Division> divisionListView) {
                 return new ListCell<>() {
                     @Override
                     protected void updateItem(Division item, boolean empty) {

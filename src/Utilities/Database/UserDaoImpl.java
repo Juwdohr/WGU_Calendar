@@ -12,10 +12,6 @@ public class UserDaoImpl implements UserDao{
 
         user.setId(results.getInt("User_ID"));
         user.setUsername(results.getString("User_Name"));
-        user.setCreated(results.getTimestamp("Create_Date"));
-        user.setCreatedBy(results.getString("Created_By"));
-        user.setLastUpdated(results.getTimestamp("Last_Update"));
-        user.setLastUpdatedBy(results.getString("Last_Updated_By"));
 
         return user;
     }
@@ -26,7 +22,7 @@ public class UserDaoImpl implements UserDao{
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM users WHERE id=" + id);
+            ResultSet results = statement.executeQuery("SELECT User_ID, User_Name FROM users WHERE id=" + id);
 
             if(results.next()) {
                 return Optional.of(extractFromResults(results));
@@ -45,7 +41,7 @@ public class UserDaoImpl implements UserDao{
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM users");
+            ResultSet results = statement.executeQuery("SELECT User_ID, User_Name FROM users");
 
             ObservableList<User> users = FXCollections.observableArrayList();
 
@@ -68,7 +64,7 @@ public class UserDaoImpl implements UserDao{
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE User_Name=? AND Password=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT User_ID, User_Name FROM users WHERE User_Name=? AND Password=?");
             statement.setString(1, username);
             statement.setString(2, password);
             ResultSet results = statement.executeQuery();
@@ -88,12 +84,8 @@ public class UserDaoImpl implements UserDao{
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO users VALUES (NULL, ?, NULL, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO users VALUES (NULL, ?)");
             statement.setString(1, user.getUsername());
-            statement.setString(2, user.getCreated().toString());
-            statement.setString(3, user.getCreatedBy());
-            statement.setString(4, user.getLastUpdated().toString());
-            statement.setString(5, user.getLastUpdatedBy());
             int result = statement.executeUpdate();
 
             if(result == 1) {
@@ -111,13 +103,9 @@ public class UserDaoImpl implements UserDao{
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE users SET User_Name=?, Create_Date=?, Created_By=?, Last_Update=?, Last_Updated_By=? WHERE User_ID=?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE users SET User_Name=?, WHERE User_ID=?");
             statement.setString(1, user.getUsername());
-            statement.setString(2, user.getCreated().toString());
-            statement.setString(3, user.getCreatedBy());
-            statement.setString(4, user.getLastUpdated().toString());
-            statement.setString(5, user.getLastUpdatedBy());
-            statement.setString(6, String.valueOf(user.getId()));
+            statement.setString(2, String.valueOf(user.getId()));
             int result = statement.executeUpdate();
 
             if(result == 1){
@@ -150,4 +138,3 @@ public class UserDaoImpl implements UserDao{
         return false;
     }
 }
-

@@ -13,10 +13,6 @@ public class DivisionsDao implements DAO<Division>{
 
         division.setDivisionId(results.getInt("Division_ID"));
         division.setDivisionName(results.getString("Division"));
-        division.setCreated(results.getTimestamp("Create_Date"));
-        division.setCreatedBy(results.getString("Create_Date"));
-        division.setLastUpdated(results.getTimestamp("Last_Update"));
-        division.setLastUpdatedBy(results.getString("Last_Updated_By"));
         division.setCountryId(results.getInt("Country_ID"));
 
         return division;
@@ -27,7 +23,7 @@ public class DivisionsDao implements DAO<Division>{
         Connection connection = DBConnection.getConnection();
         try {
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM first_level_divisions WHERE Division_ID=" + id);
+            ResultSet results = statement.executeQuery("SELECT Division_ID, Division, Country_ID FROM first_level_divisions WHERE Division_ID=" + id);
 
             if(results.next()) {
                 return Optional.of(extractFromResults(results));
@@ -43,7 +39,7 @@ public class DivisionsDao implements DAO<Division>{
         Connection connection = DBConnection.getConnection();
         try {
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM first_level_divisions");
+            ResultSet results = statement.executeQuery("SELECT Division_ID, Division, Country FROM first_level_divisions");
 
             ObservableList<Division> divisions = FXCollections.observableArrayList();
             while(results.next()) {
@@ -68,13 +64,9 @@ public class DivisionsDao implements DAO<Division>{
     public boolean insert(Division division) {
         Connection connection = DBConnection.getConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO first_level_divisions VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO first_level_divisions VALUES (NULL, ?, ?)");
             statement.setString(1, division.getDivisionName());
-            statement.setString(2, division.getCreated().toString());
-            statement.setString(3, division.getCreatedBy());
-            statement.setString(4, division.getLastUpdated().toString());
-            statement.setString(5, division.getLastUpdatedBy());
-            statement.setString(6, String.valueOf(division.getCountryId()));
+            statement.setString(2, String.valueOf(division.getCountryId()));
             int results = statement.executeUpdate();
 
             if (results == 1) return true;
@@ -90,14 +82,10 @@ public class DivisionsDao implements DAO<Division>{
     public boolean update(Division division) {
         Connection connection = DBConnection.getConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE first_level_division SET Division=?, Create_Date=?, Created_By=?, Last_Update=?, Last_Updated_By=?, Country_ID=? WHERE Division_ID=?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE first_level_division SET Division=?, Country_ID=? WHERE Division_ID=?");
             statement.setString(1, division.getDivisionName());
-            statement.setString(2, division.getCreated().toString());
-            statement.setString(3, division.getCreatedBy());
-            statement.setString(4, division.getLastUpdated().toString());
-            statement.setString(5, division.getLastUpdatedBy());
-            statement.setString(6, String.valueOf(division.getCountryId()));
-            statement.setString(7, String.valueOf(division.getDivisionId()));
+            statement.setString(2, String.valueOf(division.getCountryId()));
+            statement.setString(3, String.valueOf(division.getDivisionId()));
             int result = statement.executeUpdate();
 
             if (result == 1) return true;

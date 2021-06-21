@@ -1,6 +1,6 @@
 package Models;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Customer {
     private int customerId;
@@ -9,9 +9,9 @@ public class Customer {
     private String postalCode;
     private String phone;
     private int divisionId;
-    private Timestamp created;
+    private LocalDateTime created;
     private String createdBy;
-    private Timestamp lastUpdated;
+    private LocalDateTime lastUpdated;
     private String lastUpdatedBy;
 
     public Customer() {
@@ -27,7 +27,7 @@ public class Customer {
         this.lastUpdatedBy = null;
     }
 
-    public Customer(String customerName, String address, String postalCode, String phone, int divisionId, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
+    public Customer(String customerName, String address, String postalCode, String phone, int divisionId, LocalDateTime created, String createdBy, LocalDateTime lastUpdated, String lastUpdatedBy) {
         this.customerName = customerName;
         this.address = address;
         this.postalCode = postalCode;
@@ -39,7 +39,7 @@ public class Customer {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
+    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId, LocalDateTime created, String createdBy, LocalDateTime lastUpdated, String lastUpdatedBy) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.address = address;
@@ -100,11 +100,11 @@ public class Customer {
         this.divisionId = divisionId;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
@@ -116,11 +116,11 @@ public class Customer {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getLastUpdated() {
+    public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Timestamp lastUpdated) {
+    public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

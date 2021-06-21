@@ -27,6 +27,15 @@ public class Alerts {
         return (result.isPresent() && result.get() == ButtonType.OK);
     }
 
+    public static boolean customerConfirmation(String title, String message) {
+        alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        return (result.isPresent() && result.get() == ButtonType.OK);
+    }
+
     public static void error(String errorMessage) {
         alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(MESSAGES.getString("errorTitle"));

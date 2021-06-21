@@ -17,11 +17,11 @@ public class AppointmentDao implements DAO<Appointment>{
         appointment.setDescription(results.getString("Description"));
         appointment.setLocation(results.getString("Location"));
         appointment.setType(results.getString("Type"));
-        appointment.setStart(results.getTimestamp("Start"));
-        appointment.setEnd(results.getTimestamp("End"));
-        appointment.setCreated(results.getTimestamp("Create_Date"));
+        appointment.setStart(results.getTimestamp("Start").toLocalDateTime());
+        appointment.setEnd(results.getTimestamp("End").toLocalDateTime());
+        appointment.setCreated(results.getTimestamp("Create_Date").toLocalDateTime());
         appointment.setCreatedBy(results.getString("Created_By"));
-        appointment.setLastUpdate(results.getTimestamp("Last_Update"));
+        appointment.setLastUpdate(results.getTimestamp("Last_Update").toLocalDateTime());
         appointment.setLastUpdateBy(results.getString("Last_Updated_By"));
         appointment.setCustomerId(results.getInt("Customer_ID"));
         appointment.setContactId(results.getInt("Contact_ID"));

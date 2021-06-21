@@ -1,6 +1,6 @@
 package Models;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Appointment {
     private int id;
@@ -8,11 +8,11 @@ public class Appointment {
     private String description;
     private String location;
     private String type;
-    private Timestamp start;
-    private Timestamp end;
-    private Timestamp created;
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private LocalDateTime created;
     private String createdBy;
-    private Timestamp lastUpdate;
+    private LocalDateTime lastUpdate;
     private String lastUpdateBy;
     private int customerId;
     private int contactId;
@@ -35,7 +35,7 @@ public class Appointment {
         this.userId = -1;
     }
 
-    public Appointment(int id, String title, String description, String location, String type, Timestamp start, Timestamp end, Timestamp created, String createdBy, Timestamp lastUpdate, String lastUpdateBy, int customerId, int contactId, int userId) {
+    public Appointment(int id, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, LocalDateTime created, String createdBy, LocalDateTime lastUpdate, String lastUpdateBy, int customerId, int contactId, int userId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -92,27 +92,27 @@ public class Appointment {
         this.type = type;
     }
 
-    public Timestamp getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(Timestamp start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public Timestamp getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Timestamp end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
@@ -124,11 +124,11 @@ public class Appointment {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Timestamp lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

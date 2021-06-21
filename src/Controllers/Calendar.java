@@ -30,8 +30,8 @@ import java.util.logging.Logger;
 
 public class Calendar {
 
-    private final static Locale CURRENTLOCALE = Locale.getDefault();
-    private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENTLOCALE);
+    private final static Locale CURRENT_LOCALE = Locale.getDefault();
+    private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENT_LOCALE);
     private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
     private User user;
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
@@ -294,6 +294,13 @@ public class Calendar {
     }
 
     @FXML
+    void exitApplication() {
+        if (Alerts.confirmation(Alerts.ConfirmType.EXIT)) {
+            Platform.exit();
+        }
+    }
+
+    @FXML
     void updateAppointment() throws IOException {
         Appointment appointment = appointmentTableView.getSelectionModel().getSelectedItem();
         if(appointment != null) {
@@ -325,13 +332,6 @@ public class Calendar {
         }
     }
 
-    @FXML
-    void exitApplication() {
-        if (Alerts.confirmation(Alerts.ConfirmType.EXIT)) {
-            Platform.exit();
-        }
-    }
-
     private void loadCustomers() {
         loadingLbl.setText(MESSAGES.getString("LoadCustomers"));
         LOGGER.log(Level.FINE, "Started Loading Customers");
@@ -352,7 +352,6 @@ public class Calendar {
         LOGGER.log(Level.FINE, "Finished Loading Appointments");
     }
 
-    //Used to pass in user, and gather other data
     public void initializeData(User user) {
         this.user = user;
         usernameLbl.setText(this.user.getUsername());

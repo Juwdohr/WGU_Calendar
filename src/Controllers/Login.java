@@ -1,12 +1,10 @@
 package Controllers;
 
 import Models.User;
-import Utilities.Database.UserDaoImpl;
+import Utilities.Database.UserDao;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.print.PageLayout;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,7 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.time.ZoneId;
@@ -31,9 +28,9 @@ import java.util.logging.Logger;
 
 public class Login {
 
-    private final static Locale CURRENTLOCALE = Locale.getDefault();
+    private final static Locale CURRENT_LOCALE = Locale.getDefault();
     private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
-    private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENTLOCALE);
+    private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENT_LOCALE);
 
     @FXML
     private Text programTitle;
@@ -42,10 +39,10 @@ public class Login {
     private Label zoneIdLbl;
 
     @FXML
-    private TextField usernameTxtfield;
+    private TextField usernameTextField;
 
     @FXML
-    private PasswordField passwordTxtfield;
+    private PasswordField passwordTextField;
 
     @FXML
     private Button loginBtn;
@@ -65,8 +62,7 @@ public class Login {
     @FXML
     void LoginUser() throws IOException {
         try {
-            //TODO: Log successful login
-            User user = getUser(usernameTxtfield.getText(), passwordTxtfield.getText());
+            User user = getUser(usernameTextField.getText(), passwordTextField.getText());
             LOGGER.log(Level.INFO, user.getUsername() + " logged in successfully");
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("../Views/Calendar.fxml"));
@@ -87,7 +83,7 @@ public class Login {
 
             newStage.show();
         } catch (NoSuchElementException ex) {
-            LOGGER.log(Level.INFO, usernameTxtfield.getText() + " attempted to login.");
+            LOGGER.log(Level.INFO, usernameTextField.getText() + " attempted to login.");
             errorMessageTxt.setText(MESSAGES.getString("LoginError"));
         }
 
@@ -97,20 +93,19 @@ public class Login {
     void initialize() {
         assert programTitle != null : "fx:id=\"programTitle\" was not injected: check your FXML file 'Login.fxml'.";
         assert zoneIdLbl != null : "fx:id=\"zoneIdLbl\" was not injected: check your FXML file 'Login.fxml'.";
-        assert usernameTxtfield != null : "fx:id=\"usernameTxtfield\" was not injected: check your FXML file 'Login.fxml'.";
-        assert passwordTxtfield != null : "fx:id=\"passwordTxtfield\" was not injected: check your FXML file 'Login.fxml'.";
+        assert usernameTextField != null : "fx:id=\"usernameTextField\" was not injected: check your FXML file 'Login.fxml'.";
+        assert passwordTextField != null : "fx:id=\"passwordTextField\" was not injected: check your FXML file 'Login.fxml'.";
         assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'Login.fxml'.";
         assert closeBtn != null : "fx:id=\"closeBtn\" was not injected: check your FXML file 'Login.fxml'.";
         assert errorMessageTxt != null : "fx:id=\"errorMessageTxt\" was not injected: check your FXML file 'Login.fxml'.";
         errorMessageTxt.setText("");
-        //TODO: Internationalize programTitle
         programTitle.setText(MESSAGES.getString("Title"));
-        usernameTxtfield.setPromptText(MESSAGES.getString("UsernamePrompt"));
-        passwordTxtfield.setPromptText(MESSAGES.getString("PasswordPrompt"));
+        usernameTextField.setPromptText(MESSAGES.getString("UsernamePrompt"));
+        passwordTextField.setPromptText(MESSAGES.getString("PasswordPrompt"));
         zoneIdLbl.setText(ZoneId.systemDefault().toString());
 
         //Allows a user press the enter key to login to application.
-        usernameTxtfield.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {
+        usernameTextField.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {
             if(ev.getCode() == KeyCode.ENTER) {
                 try{
                     LoginUser();
@@ -119,7 +114,7 @@ public class Login {
                 }
             }
         });
-        passwordTxtfield.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {
+        passwordTextField.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {
             if(ev.getCode() == KeyCode.ENTER) {
                 try{
                     LoginUser();
@@ -140,7 +135,7 @@ public class Login {
     }
 
     private User getUser(String username, String password) throws NoSuchElementException {
-        UserDaoImpl userDao = new UserDaoImpl();
+        UserDao userDao = new UserDao();
         Optional<User> user = userDao.getUserByUserNameAndPassword(username, password);
 
         return user.orElseThrow();

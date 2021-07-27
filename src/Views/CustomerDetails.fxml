@@ -37,7 +37,7 @@
       <ButtonBar prefHeight="25.0" prefWidth="280.0">
          <buttons>
             <Button fx:id="submitBtn" defaultButton="true" mnemonicParsing="false" onAction="#addCustomer" text="Submit" />
-            <Button fx:id="cancelBtn" cancelButton="true" mnemonicParsing="false" onAction="#close" text="Cancel" />
+            <Button fx:id="cancelBtn" cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
          </buttons>
       </ButtonBar>
    </VBox>

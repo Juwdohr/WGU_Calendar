@@ -1,28 +1,28 @@
 package Models;
 
 public class Contact {
-    private int contactId;
+    private int id;
     private String name;
     private String email;
 
     public Contact() {
-        this.contactId = -1;
+        this.id = -1;
         this.name = null;
         this.email = null;
     }
 
-    public Contact(int contactId, String name, String email) {
-        this.contactId = contactId;
+    public Contact(int id, String name, String email) {
+        this.id = id;
         this.name = name;
         this.email = email;
     }
 
-    public int getContactId() {
-        return contactId;
+    public int getId() {
+        return id;
     }
 
-    public void setContactId(int contactId) {
-        this.contactId = contactId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

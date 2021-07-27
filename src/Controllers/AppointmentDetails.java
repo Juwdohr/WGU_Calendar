@@ -2,27 +2,32 @@ package Controllers;
 
 import Models.Appointment;
 import Models.Contact;
+import Models.Customer;
+import Utilities.Alerts;
+import Utilities.Database.ContactDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
 public class AppointmentDetails {
 
     private Appointment appointment = null;
     private Consumer<Appointment> onComplete;
+    private final ObservableList<Customer> customers = FXCollections.observableArrayList();
     private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
-
-    @FXML
-    private Label appointmentIdLabel;
-
-    @FXML
-    private TextField appointmentIdTextfField;
+    private final ObservableList<LocalTime> startTimeList = FXCollections.observableArrayList();
+    private final ObservableList<LocalTime> endTimeList = FXCollections.observableArrayList();
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
 
     @FXML
     private TextField appointmentTitleTextField;
@@ -37,19 +42,19 @@ public class AppointmentDetails {
     private ComboBox<Contact> contactComboBox;
 
     @FXML
+    private ComboBox<Customer> customerComboBox;
+
+    @FXML
     private DatePicker startDatePicker;
 
     @FXML
     private DatePicker endDatePicker;
 
     @FXML
-    private ComboBox<?> startTimePicker;
+    private ComboBox<LocalTime> startTimePicker;
 
     @FXML
-    private ComboBox<?> endTimePicker;
-
-    @FXML
-    private Label appointmentDescriptionLabel;
+    private ComboBox<LocalTime> endTimePicker;
 
     @FXML
     private TextArea appointmentDescriptionTextArea;
@@ -62,67 +67,246 @@ public class AppointmentDetails {
 
     @FXML
     void initialize() {
-        assert appointmentIdLabel != null : "fx:id=\"appointmentIdLabel\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert appointmentIdTextfField != null : "fx:id=\"appointmentIdTextfField\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert appointmentTitleTextField != null : "fx:id=\"appointmentTitleTextField\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert appointmentLocationTextField != null : "fx:id=\"appointmentLocationTextField\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert appointmentTypeTextField != null : "fx:id=\"appointmentTypeTextField\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert contactComboBox != null : "fx:id=\"contactComboBox\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert startTimePicker != null : "fx:id=\"startTimePicker\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert endTimePicker != null : "fx:id=\"startTimePicker\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert appointmentDescriptionLabel != null : "fx:id=\"appointmentDescriptionLabel\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert appointmentDescriptionTextArea != null : "fx:id=\"appointmentDescriptionTextArea\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert submitAppointment != null : "fx:id=\"submitAppointment\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
-        assert cancelAppointment != null : "fx:id=\"cancelAppointment\" was not injected: check your FXML file 'AppointmentDetails.fxml'.";
+        contactComboBox.setItems(contacts);
+        contactComboBox.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<Contact> call(ListView<Contact> contactListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(Contact item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if(item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item.getName());
+                        }
+                    }
+                };
+            }
+        });
+        contactComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Contact item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item.getName());
+                }
+            }
+        });
+
+        customerComboBox.setItems(customers);
+        customerComboBox.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<Customer> call(ListView<Customer> contactListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(Customer item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if(item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item.getName());
+                        }
+                    }
+                };
+            }
+        });
+        customerComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Customer item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item.getName());
+                }
+            }
+        });
+
+        startDatePicker.setValue(LocalDate.now());
+        endDatePicker.setValue(LocalDate.now());
+
+        startTimePicker.setItems(startTimeList);
+        startTimePicker.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<LocalTime> call(ListView<LocalTime> stringListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(LocalTime item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.format(timeFormatter));
+                        }
+                    }
+                };
+            }
+        });
+        startTimePicker.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(LocalTime item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item.format(timeFormatter));
+                }
+            }
+        });
+
+        endTimePicker.setItems(endTimeList);
+        endTimePicker.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<LocalTime> call(ListView<LocalTime> stringListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(LocalTime item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.format(timeFormatter));
+                        }
+                    }
+                };
+            }
+        });
+        endTimePicker.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(LocalTime item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item.format(timeFormatter));
+                }
+            }
+        });
 
     }
 
-    public void initializeData(Appointment appointment, Consumer<Appointment> onComplete){
+    public void initializeData(Appointment appointment, ObservableList<Customer> customers, Consumer<Appointment> onComplete){
         this.onComplete = onComplete;
-        this.appointment = appointment;
+        this.customers.addAll(customers);
 
         loadContacts();
         loadStartEndTimes();
-        loadAppointments();
+        setNewAppointmentTimes();
+        loadAppointment(appointment);
     }
 
-    private final void loadContacts() {}
+    private void loadContacts() {
+        ContactDao contactDao = new ContactDao();
+        contacts.addAll(contactDao.getAll());
+    }
 
-    private final void loadStartEndTimes() {}
+    private void loadStartEndTimes() {
+        int[] quarterHours =  {0, 15, 30, 45, 0};
 
-    private final void loadAppointments() {
-        if(appointment != null) {
-            appointmentIdTextfField.setText(String.valueOf(appointment.getId()));
-            appointmentTitleTextField.setText(appointment.getTitle());
-            appointmentLocationTextField.setText(appointment.getLocation());
-            appointmentTypeTextField.setText(appointment.getType());
-            appointmentDescriptionTextArea.setText(appointment.getDescription());
+        for(int i = 8; i < 22; i++){
+            for(int j = 0; j < 4; j++) {
+                startTimeList.add(LocalDateTime.of(
+                        LocalDate.now(),
+                        LocalTime.of(i, quarterHours[j])
+                ).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime());
+                endTimeList.add(LocalDateTime.of(
+                        LocalDate.now(),
+                        LocalTime.of(i, quarterHours[j])
+                ).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime());
+            }
         }
+        endTimeList.add(LocalDateTime.of(
+                LocalDate.now(),
+                LocalTime.of(22,0)
+        ).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime());
+    }
+
+    private void setNewAppointmentTimes() {
+        LocalTime current = LocalTime.now();
+        startTimePicker.getSelectionModel().select(0);
+        endTimePicker.getSelectionModel().select(1);
+        for (LocalTime time: startTimeList){
+            if(current.isBefore(time)){
+                startTimePicker.getSelectionModel().select(time);
+                endTimePicker.getSelectionModel().select(endTimeList.indexOf(time.plusMinutes(15)));
+                break;
+            }
+        }
+    }
+
+    private void loadAppointment(Appointment appointment) {
+        if(appointment == null) return;
+        // Set Current Details
+        appointmentTitleTextField.setText(appointment.getTitle());
+        appointmentLocationTextField.setText(appointment.getDescription());
+        appointmentTypeTextField.setText(appointment.getType());
+        appointmentDescriptionTextArea.setText(appointment.getDescription());
+
+        // Set Current Attendees
+         contactComboBox.getSelectionModel().select(contacts.stream().filter(contact -> contact.getId() == appointment.getContactId()).findAny().orElse(null));
+         customerComboBox.getSelectionModel().select(customers.stream().filter(customer -> customer.getId() == appointment.getCustomerId()).findAny().orElse(null));
+
+        // Set current Date/Time Selectors
+        // Start
+        startDatePicker.setValue(appointment.getStart().toLocalDate());
+        startTimePicker.getSelectionModel().select(appointment.getStart().toLocalTime());
+
+        // End
+        endDatePicker.setValue(appointment.getEnd().toLocalDate());
+        endTimePicker.getSelectionModel().select(appointment.getEnd().toLocalTime());
     }
 
     @FXML
     void cancel() {
-        //TODO: Alert for canceling Add/Update Appointment
-        Stage stage = (Stage) cancelAppointment.getScene().getWindow();
-        stage.close();
+        if(Alerts.confirmation(Alerts.ConfirmType.CANCEL)) {
+            Stage stage = (Stage) cancelAppointment.getScene().getWindow();
+            stage.close();
+        }
     }
 
     @FXML
     void submit() {
-        if(appointment == null)
-            appointment = new Appointment();
-
-        //TODO: Set appointment details
-
-        if(appointment.getCreated() == null)
-            appointment.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        appointment.setLastUpdate(Timestamp.valueOf(LocalDateTime.now()));
-
-        onComplete.accept(appointment);
+        onComplete.accept(extractAppointmentDetails());
 
         Stage stage = (Stage) submitAppointment.getScene().getWindow();
         stage.close();
+    }
+
+    private Appointment extractAppointmentDetails() {
+        if(appointment == null) appointment = new Appointment();
+
+        // Set Appointment Details
+        appointment.setTitle(appointmentTitleTextField.getText());
+        appointment.setDescription(appointmentDescriptionTextArea.getText());
+        appointment.setLocation(appointmentLocationTextField.getText());
+        appointment.setType(appointmentTypeTextField.getText());
+
+        // Set Appointment Times
+        appointment.setStart(LocalDateTime.of(startDatePicker.getValue(), startTimePicker.getSelectionModel().getSelectedItem()));
+        appointment.setEnd(LocalDateTime.of(endDatePicker.getValue(), endTimePicker.getSelectionModel().getSelectedItem()));
+
+        // Set Attendees
+        appointment.setCustomerId(customerComboBox.getSelectionModel().getSelectedItem().getId());
+        appointment.setCustomer(customerComboBox.getSelectionModel().getSelectedItem().getName());
+        appointment.setContactId(contactComboBox.getSelectionModel().getSelectedItem().getId());
+        appointment.setContact(contactComboBox.getSelectionModel().getSelectedItem().getName());
+
+        // Set Appointment Creation and Updated values.
+        if(appointment.getCreated() == null)
+            appointment.setCreated(LocalDateTime.now());
+        appointment.setLastUpdate(LocalDateTime.now());
+
+        return appointment;
     }
 }

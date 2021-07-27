@@ -1,7 +1,6 @@
 package Utilities.Database;
 
 import javafx.collections.ObservableList;
-
 import java.util.Optional;
 
 public interface DAO<T> {

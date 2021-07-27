@@ -3,6 +3,7 @@ package Controllers;
 import Models.Country;
 import Models.Customer;
 import Models.Division;
+import Utilities.Alerts;
 import Utilities.Database.CountryDao;
 import Utilities.Database.DivisionsDao;
 import javafx.collections.FXCollections;
@@ -14,9 +15,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
@@ -65,14 +63,17 @@ public class CustomerDetails {
         if (customer == null)
             customer = new Customer();
 
-        customer.setCustomerName(customerNameTextField.getText());
+        customer.setName(customerNameTextField.getText());
         customer.setAddress(customerAddressTextField.getText());
-        customer.setDivisionId(stateProvinceComboBox.getValue().getDivisionId());
+        customer.setDivisionId(stateProvinceComboBox.getValue().getId());
+        customer.setDivision(stateProvinceComboBox.getValue().getDivisionName());
+        customer.setCountryId(countryComboBox.getValue().getId());
+        customer.setCountry(countryComboBox.getValue().getName());
         customer.setPostalCode(postalCodeTextField.getText());
         customer.setPhone(phoneNumber.getText());
         if(customer.getCreated() == null)
-            customer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        customer.setLastUpdated(Timestamp.valueOf(LocalDateTime.now()));
+            customer.setCreated(LocalDateTime.now());
+        customer.setLastUpdated(LocalDateTime.now());
 
         onComplete.accept(customer);
 
@@ -81,10 +82,11 @@ public class CustomerDetails {
     }
 
     @FXML
-    void close(ActionEvent event)  {
-        //TODO: Alert for closing scene.
-        Stage stage = (Stage) cancelBtn.getScene().getWindow();
-        stage.close();
+    void cancel()  {
+        if(Alerts.confirmation(Alerts.ConfirmType.CANCEL)) {
+            Stage stage = (Stage) cancelBtn.getScene().getWindow();
+            stage.close();
+        }
     }
 
     @FXML
@@ -103,7 +105,7 @@ public class CustomerDetails {
         stateProvinceComboBox.setItems(divisions);
         stateProvinceComboBox.setCellFactory(new Callback<>() {
             @Override
-            public ListCell<Division> call(ListView<Division> listView) {
+            public ListCell<Division> call(ListView<Division> divisionListView) {
                 return new ListCell<>() {
                     @Override
                     protected void updateItem(Division item, boolean empty) {
@@ -144,7 +146,7 @@ public class CustomerDetails {
                         if (item == null || empty) {
                             setText(null);
                         } else {
-                            setText(item.getCountryName());
+                            setText(item.getName());
                         }
                     }
                 };
@@ -156,14 +158,14 @@ public class CustomerDetails {
                 super.updateItem(item, empty);
 
                 if(item != null) {
-                    setText(item.getCountryName());
+                    setText(item.getName());
                 } else {
                     setText(null);
                 }
             }
         });
         countryComboBox.setOnAction(event -> {
-            int countryId = countryComboBox.getSelectionModel().getSelectedItem().getCountryId();
+            int countryId = countryComboBox.getSelectionModel().getSelectedItem().getId();
             ObservableList<Division> filteredDivisions = FXCollections.observableArrayList();
 
             for(Division division : divisions) {
@@ -199,18 +201,18 @@ public class CustomerDetails {
 
     private void loadCustomer() {
         if (customer != null ) {
-            customerIdTextField.setText(String.valueOf(customer.getCustomerId()));
-            customerNameTextField.setText(customer.getCustomerName());
+            customerIdTextField.setText(String.valueOf(customer.getId()));
+            customerNameTextField.setText(customer.getName());
             customerAddressTextField.setText(customer.getAddress());
             postalCodeTextField.setText(customer.getPostalCode());
             phoneNumber.setText(customer.getPhone());
 
             for (Division division: divisions) {
-                if(division.getDivisionId() != customer.getDivisionId()) continue;
+                if(division.getId() != customer.getDivisionId()) continue;
                 stateProvinceComboBox.setValue(division);
 
                 for(Country country:countries) {
-                    if (country.getCountryId() != division.getCountryId()) continue;
+                    if (country.getId() != division.getCountryId()) continue;
                     countryComboBox.setValue(country);
                 }
             }

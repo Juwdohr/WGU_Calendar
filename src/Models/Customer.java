@@ -1,71 +1,56 @@
 package Models;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Customer {
-    private int customerId;
-    private String customerName;
+    private int id;
+    private String name;
     private String address;
     private String postalCode;
     private String phone;
-    private int divisionId;
-    private Timestamp created;
+    private LocalDateTime created;
     private String createdBy;
-    private Timestamp lastUpdated;
+    private LocalDateTime lastUpdated;
     private String lastUpdatedBy;
+    private int divisionId;
+    private String division;
+    private int countryId;
+    private String country;
 
     public Customer() {
-        this.customerId = -1;
-        this.customerName = null;
-        this.address = null;
-        this.postalCode = null;
-        this.phone = null;
-        this.divisionId = -1;
-        this.created = null;
-        this.createdBy = null;
-        this.lastUpdated = null;
-        this.lastUpdatedBy = null;
+        id = -1;
     }
 
-    public Customer(String customerName, String address, String postalCode, String phone, int divisionId, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
-        this.customerName = customerName;
+    public Customer(int id, String name, String address, String postalCode, String phone, LocalDateTime created, String createdBy, LocalDateTime lastUpdated, String lastUpdatedBy, int divisionId, String division, int countryId, String country) {
+        this.id = id;
+        this.name = name;
         this.address = address;
         this.postalCode = postalCode;
         this.phone = phone;
-        this.divisionId = divisionId;
         this.created = created;
         this.createdBy = createdBy;
         this.lastUpdated = lastUpdated;
         this.lastUpdatedBy = lastUpdatedBy;
-    }
-
-    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.address = address;
-        this.postalCode = postalCode;
-        this.phone = phone;
         this.divisionId = divisionId;
-        this.created = created;
-        this.createdBy = createdBy;
-        this.lastUpdated = lastUpdated;
-        this.lastUpdatedBy = lastUpdatedBy;
+        this.division = division;
+        this.countryId = countryId;
+        this.country = country;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getId() {
+        return id;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getName() {
+        return name;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddress() {
@@ -92,6 +77,38 @@ public class Customer {
         this.phone = phone;
     }
 
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
     public int getDivisionId() {
         return divisionId;
     }
@@ -100,35 +117,27 @@ public class Customer {
         this.divisionId = divisionId;
     }
 
-    public Timestamp getCreated() {
-        return created;
+    public String getDivision() {
+        return division;
     }
 
-    public void setCreated(Timestamp created) {
-        this.created = created;
+    public void setDivision(String division) {
+        this.division = division;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public int getCountryId() {
+        return countryId;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 
-    public Timestamp getLastUpdated() {
-        return lastUpdated;
+    public String getCountry() {
+        return country;
     }
 
-    public void setLastUpdated(Timestamp lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(String lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

@@ -1,78 +1,32 @@
 package Models;
 
-import java.sql.Timestamp;
-
 public class Country {
-    private int countryId;
-    private String countryName;
-    private Timestamp created;
-    private String createdBy;
-    private Timestamp lastUpdated;
-    private String lastUpdatedBy;
+    private int id;
+    private String name;
 
     public Country() {
-        this.countryId = -1;
-        this.countryName = null;
-        this.created = null;
-        this.createdBy = null;
-        this.lastUpdated = null;
-        this.lastUpdatedBy = null;
+        this.id = -1;
+        this.name = null;
     }
 
-    public Country(int countryId, String countryName, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
-        this.countryId = countryId;
-        this.countryName = countryName;
-        this.created = created;
-        this.createdBy = createdBy;
-        this.lastUpdated = lastUpdated;
-        this.lastUpdatedBy = lastUpdatedBy;
+    public Country(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public int getId() {
+        return id;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getCountryName() {
-        return countryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
-
-    public Timestamp getCreated() {
-        return created;
-    }
-
-    public void setCreated(Timestamp created) {
-        this.created = created;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Timestamp lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(String lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -1,6 +1,6 @@
 package Models;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Appointment {
     private int id;
@@ -8,34 +8,28 @@ public class Appointment {
     private String description;
     private String location;
     private String type;
-    private Timestamp start;
-    private Timestamp end;
-    private Timestamp created;
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private LocalDateTime created;
     private String createdBy;
-    private Timestamp lastUpdate;
+    private LocalDateTime lastUpdate;
     private String lastUpdateBy;
     private int customerId;
+    private String customer;
     private int contactId;
+    private String contact;
     private int userId;
+    private String user;
 
     public Appointment() {
-        this.id = -1;
-        this.title = null;
-        this.description = null;
-        this.location = null;
-        this.type = null;
-        this.start = null;
-        this.end = null;
-        this.created = null;
-        this.createdBy = null;
-        this.lastUpdate = null;
-        this.lastUpdateBy = null;
-        this.customerId = -1;
-        this.contactId = -1;
-        this.userId = -1;
+        this(-1, null, null, null, null, null, null, null, null, null,null,  -1, null, -1, null, -1, null);
     }
 
-    public Appointment(int id, String title, String description, String location, String type, Timestamp start, Timestamp end, Timestamp created, String createdBy, Timestamp lastUpdate, String lastUpdateBy, int customerId, int contactId, int userId) {
+    public Appointment(
+            int id, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, LocalDateTime created, String createdBy, LocalDateTime lastUpdate, String lastUpdateBy,
+            int customerId, String customer,
+            int contactId, String contact,
+            int userId, String user) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -48,8 +42,11 @@ public class Appointment {
         this.lastUpdate = lastUpdate;
         this.lastUpdateBy = lastUpdateBy;
         this.customerId = customerId;
+        this.customer = customer;
         this.contactId = contactId;
+        this.contact = contact;
         this.userId = userId;
+        this.user = user;
     }
 
     public int getId() {
@@ -92,27 +89,27 @@ public class Appointment {
         this.type = type;
     }
 
-    public Timestamp getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(Timestamp start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public Timestamp getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Timestamp end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
@@ -124,11 +121,11 @@ public class Appointment {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Timestamp lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -148,6 +145,14 @@ public class Appointment {
         this.customerId = customerId;
     }
 
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
     public int getContactId() {
         return contactId;
     }
@@ -156,11 +161,31 @@ public class Appointment {
         this.contactId = contactId;
     }
 
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public int getCustomerID() {
+        return customerId;
     }
 }

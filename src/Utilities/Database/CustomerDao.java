@@ -10,29 +10,29 @@ import java.util.Optional;
 
 public class CustomerDao implements DAO<Customer>{
 
-    public Customer extractFromResults(ResultSet results) throws SQLException {
-        Customer customer = new Customer();
-
-        customer.setCustomerId(results.getInt("Customer_ID"));
-        customer.setCustomerName(results.getString("Customer_Name"));
-        customer.setAddress(results.getString("Address"));
-        customer.setDivisionId(results.getInt("Division_ID"));
-        customer.setPostalCode(results.getString("Postal_Code"));
-        customer.setPhone(results.getString("Phone"));
-        customer.setCreated(results.getTimestamp("Create_Date").toLocalDateTime());
-        customer.setCreatedBy(results.getString("Created_By"));
-        customer.setLastUpdated(results.getTimestamp("Last_Update").toLocalDateTime());
-        customer.setLastUpdatedBy(results.getString("Last_Updated_By"));
-
-        return customer;
+    private Customer extractFromResults(ResultSet results) throws SQLException {
+        return new Customer(
+            results.getInt("Customer_ID"),
+            results.getString("Customer_Name"),
+            results.getString("Address"),
+            results.getString("Postal_Code"),
+            results.getString("Phone"),
+            results.getTimestamp("Create_Date").toLocalDateTime(),
+            results.getString("Created_By"),
+            results.getTimestamp("Last_Update").toLocalDateTime(),
+            results.getString("Last_Updated_By"),
+            results.getInt("Division_ID"),
+            results.getString("Division"),
+            results.getInt("Country_ID"),
+            results.getString("Country")
+        );
     }
 
     @Override
     public Optional<Customer> get(int id) {
-        Connection connection = DBConnection.getConnection();
-        try {
+        try(Connection connection = DBConnection.getConnection()){
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM customers WHERE Customer_ID=" + id);
+            ResultSet results = statement.executeQuery("SELECT customers.*, first_level_divisions.Division, first_level_divisions.COUNTRY_ID, countries.Country FROM customers, first_level_divisions, countries WHERE customers.Division_ID=first_level_divisions.Division_ID and first_level_divisions.COUNTRY_ID = countries.Country_ID and customer.Customer_ID=" + id);
 
             if(results.next()) {
                 return Optional.of(extractFromResults(results));
@@ -47,11 +47,9 @@ public class CustomerDao implements DAO<Customer>{
 
     @Override
     public ObservableList<Customer> getAll() {
-        Connection connection = DBConnection.getConnection();
-
-        try {
+        try (Connection connection = DBConnection.getConnection()){
             Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM customers");
+            ResultSet results = statement.executeQuery("SELECT customers.*, first_level_divisions.Division, first_level_divisions.COUNTRY_ID, countries.Country FROM customers, first_level_divisions, countries WHERE customers.Division_ID=first_level_divisions.Division_ID and first_level_divisions.COUNTRY_ID = countries.Country_ID");
 
             ObservableList<Customer> customerList = FXCollections.observableArrayList();
 
@@ -66,56 +64,53 @@ public class CustomerDao implements DAO<Customer>{
             ex.printStackTrace();
         }
 
-        return null;
-    }
-
-    @Override
-    public ObservableList<Customer> getAll(int userId) {
-        throw new UnsupportedOperationException();
+        return FXCollections.observableArrayList();
     }
 
     @Override
     public boolean insert(Customer customer) {
-        Connection connection = DBConnection.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO customers VALUE (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            statement.setString(1, customer.getCustomerName());
+        try(Connection connection = DBConnection.getConnection()){
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO customers VALUE (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, customer.getName());
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
             statement.setString(4, customer.getPhone());
-            statement.setString(5, customer.getCreated().toString());
+            statement.setTimestamp(5, Timestamp.valueOf(customer.getCreated()));
             statement.setString(6, customer.getCreatedBy());
-            statement.setString(7, customer.getLastUpdated().toString());
+            statement.setTimestamp(7, Timestamp.valueOf(customer.getLastUpdated()));
             statement.setString(8, customer.getLastUpdatedBy());
-            statement.setString(9, String.valueOf(customer.getDivisionId()));
+            statement.setInt(9, customer.getDivisionId());
 
             int result = statement.executeUpdate();
+            ResultSet results = statement.getGeneratedKeys();
 
-            if (result == 1) return true;
+            if (result == 1 & results.next()) {
+                customer.setId(results.getInt(1));
+                return true;
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+
         return false;
     }
 
     @Override
     public boolean update(Customer customer) {
-        Connection connection = DBConnection.getConnection();
-
-        try {
+        try(Connection connection = DBConnection.getConnection()){
             PreparedStatement statement = connection.prepareStatement("UPDATE customers SET Customer_Name=?,  Address=?, Division_ID=?, Postal_Code=?, Phone=?, Create_Date=?, Created_By=?, Last_Update=?, Last_Updated_By=? WHERE Customer_ID=?");
 
-            statement.setString(1, customer.getCustomerName());
+            statement.setString(1, customer.getName());
             statement.setString(2, customer.getAddress());
-            statement.setString(3, customer.getPostalCode());
-            statement.setString(4, customer.getPhone());
-            statement.setString(5, customer.getCreated().toString());
-            statement.setString(6, customer.getCreatedBy());
-            statement.setString(7, customer.getLastUpdated().toString());
-            statement.setString(8, customer.getLastUpdatedBy());
-            statement.setString(9, String.valueOf(customer.getDivisionId()));
-            statement.setString(10, String.valueOf(customer.getCustomerId()));
+            statement.setInt(3, customer.getDivisionId());
+            statement.setString(4, customer.getPostalCode());
+            statement.setString(5, customer.getPhone());
+            statement.setTimestamp(6, Timestamp.valueOf(customer.getCreated()));
+            statement.setString(7, customer.getCreatedBy());
+            statement.setTimestamp(8, Timestamp.valueOf(customer.getLastUpdated()));
+            statement.setString(9, customer.getLastUpdatedBy());
+            statement.setInt(10, customer.getId());
 
             int result = statement.executeUpdate();
 
@@ -130,8 +125,7 @@ public class CustomerDao implements DAO<Customer>{
 
     @Override
     public boolean delete(int id) {
-        Connection connection = DBConnection.getConnection();
-        try {
+        try(Connection connection = DBConnection.getConnection()){
             Statement statement = connection.createStatement();
             int result = statement.executeUpdate("DELETE FROM customers WHERE Customer_ID=" + id);
 

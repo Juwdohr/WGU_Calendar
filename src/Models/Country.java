@@ -1,34 +1,32 @@
 package Models;
 
-import java.sql.Timestamp;
-
 public class Country {
-    private int countryId;
-    private String countryName;
+    private int id;
+    private String name;
 
     public Country() {
-        this.countryId = -1;
-        this.countryName = null;
+        this.id = -1;
+        this.name = null;
     }
 
-    public Country(int countryId, String countryName, Timestamp created, String createdBy, Timestamp lastUpdated, String lastUpdatedBy) {
-        this.countryId = countryId;
-        this.countryName = countryName;
+    public Country(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public int getId() {
+        return id;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getCountryName() {
-        return countryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -3,69 +3,54 @@ package Models;
 import java.time.LocalDateTime;
 
 public class Customer {
-    private int customerId;
-    private String customerName;
+    private int id;
+    private String name;
     private String address;
     private String postalCode;
     private String phone;
-    private int divisionId;
     private LocalDateTime created;
     private String createdBy;
     private LocalDateTime lastUpdated;
     private String lastUpdatedBy;
+    private int divisionId;
+    private String division;
+    private int countryId;
+    private String country;
 
     public Customer() {
-        this.customerId = -1;
-        this.customerName = null;
-        this.address = null;
-        this.postalCode = null;
-        this.phone = null;
-        this.divisionId = -1;
-        this.created = null;
-        this.createdBy = null;
-        this.lastUpdated = null;
-        this.lastUpdatedBy = null;
+        id = -1;
     }
 
-    public Customer(String customerName, String address, String postalCode, String phone, int divisionId, LocalDateTime created, String createdBy, LocalDateTime lastUpdated, String lastUpdatedBy) {
-        this.customerName = customerName;
+    public Customer(int id, String name, String address, String postalCode, String phone, LocalDateTime created, String createdBy, LocalDateTime lastUpdated, String lastUpdatedBy, int divisionId, String division, int countryId, String country) {
+        this.id = id;
+        this.name = name;
         this.address = address;
         this.postalCode = postalCode;
         this.phone = phone;
-        this.divisionId = divisionId;
         this.created = created;
         this.createdBy = createdBy;
         this.lastUpdated = lastUpdated;
         this.lastUpdatedBy = lastUpdatedBy;
-    }
-
-    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId, LocalDateTime created, String createdBy, LocalDateTime lastUpdated, String lastUpdatedBy) {
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.address = address;
-        this.postalCode = postalCode;
-        this.phone = phone;
         this.divisionId = divisionId;
-        this.created = created;
-        this.createdBy = createdBy;
-        this.lastUpdated = lastUpdated;
-        this.lastUpdatedBy = lastUpdatedBy;
+        this.division = division;
+        this.countryId = countryId;
+        this.country = country;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getId() {
+        return id;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getName() {
+        return name;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddress() {
@@ -92,12 +77,12 @@ public class Customer {
         this.phone = phone;
     }
 
-    public int getDivisionId() {
-        return divisionId;
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
     }
 
-    public void setDivisionId(int divisionId) {
-        this.divisionId = divisionId;
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
     }
 
     public LocalDateTime getCreated() {
@@ -108,27 +93,51 @@ public class Customer {
         this.created = created;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getLastUpdated() {
-        return lastUpdated;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
     public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public int getDivisionId() {
+        return divisionId;
+    }
+
+    public void setDivisionId(int divisionId) {
+        this.divisionId = divisionId;
+    }
+
+    public String getDivision() {
+        return division;
+    }
+
+    public void setDivision(String division) {
+        this.division = division;
+    }
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

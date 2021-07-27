@@ -17,8 +17,8 @@ public class Alerts {
 
     public static boolean confirmation(ConfirmType confirmType) {
         alert = new Alert(Alert.AlertType.CONFIRMATION);
-        String title = "confirmTitle" + confirmType.toString();
-        String message = "confirmMessage" + confirmType.toString();
+        String title = "confirmTitle" + confirmType;
+        String message = "confirmMessage" + confirmType;
 
         alert.setHeaderText(MESSAGES.getString(title));
         alert.setContentText(MESSAGES.getString(message));
@@ -27,7 +27,7 @@ public class Alerts {
         return (result.isPresent() && result.get() == ButtonType.OK);
     }
 
-    public static boolean customerConfirmation(String title, String message) {
+    public static boolean customConfirmation(String title, String message) {
         alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(title);
         alert.setContentText(message);

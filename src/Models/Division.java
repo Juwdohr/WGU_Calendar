@@ -1,31 +1,23 @@
 package Models;
 
 
-import java.sql.Timestamp;
-
 public class Division {
-    private int divisionId;
+    private int id;
     private String divisionName;
-    private int countryId;
+    private int country;
 
-    public Division() {
-        this.divisionId = -1;
-        this.divisionName = null;
-        this.countryId = -1;
-    }
-
-    public Division(int divisionId, String divisionName, int countryId) {
-        this.divisionId = divisionId;
+    public Division(int id, String divisionName, int country) {
+        this.id = id;
         this.divisionName = divisionName;
-        this.countryId = countryId;
+        this.country = country;
     }
 
-    public int getDivisionId() {
-        return divisionId;
+    public int getId() {
+        return id;
     }
 
-    public void setDivisionId(int divisionId) {
-        this.divisionId = divisionId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDivisionName() {
@@ -37,10 +29,10 @@ public class Division {
     }
 
     public int getCountryId() {
-        return countryId;
+        return country;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setCountry(int country) {
+        this.country = country;
     }
 }

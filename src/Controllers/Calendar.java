@@ -6,22 +6,25 @@ import Models.User;
 import Utilities.Alerts;
 import Utilities.Database.AppointmentDao;
 import Utilities.Database.CustomerDao;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -30,74 +33,23 @@ import java.util.logging.Logger;
 
 public class Calendar {
 
+    private final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a z");
     private final static Locale CURRENT_LOCALE = Locale.getDefault();
     private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENT_LOCALE);
     private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
-    private User user;
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
     private final ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+    private final FilteredList<Appointment> filteredAppointments = new FilteredList<>(appointments);
     private final CustomerDao customerDao = new CustomerDao();
     private final AppointmentDao appointmentDao = new AppointmentDao();
-
-    @FXML
-    private Menu fileMenu;
-
-    @FXML
-    private Menu addMenu;
-
-    @FXML
-    private MenuItem newAppointmentMenuItem;
-
-    @FXML
-    private MenuItem newCustomerMenuItem;
-
-    @FXML
-    private MenuItem logoutMenuItem;
-
-    @FXML
-    private Menu editMenu;
-
-    @FXML
-    private MenuItem editAppointmentMenuItem;
-
-    @FXML
-    private MenuItem editCustomerMenuItem;
-
-    @FXML
-    private Menu helpMenu;
-
-    @FXML
-    private MenuItem aboutMenuItem;
+    private User user;
 
     @FXML
     private Label usernameLbl;
 
     @FXML
-    private RadioButton weekViewRadio;
-
-    @FXML
     private ToggleGroup CalendarDuration;
-
-    @FXML
-    private RadioButton monthViewRadio;
-
-    @FXML
-    private MenuButton addMenuButton;
-
-    @FXML
-    private MenuItem addAppointmentMenuItem;
-
-    @FXML
-    private MenuItem addCustomerMenuItem;
-
-    @FXML
-    private MenuButton updateMenuButton;
-
-    @FXML
-    private MenuItem updateAppointmentMenuItem;
-
-    @FXML
-    private MenuItem updateCustomerMenuItem;
 
     @FXML
     private TableView<Appointment> appointmentTableView;
@@ -121,118 +73,40 @@ public class Calendar {
     private TableColumn<Appointment, String> appointmentType;
 
     @FXML
-    private TableColumn<Appointment, Timestamp> appointmentStartDateTime;
+    private TableColumn<Appointment, LocalDateTime> appointmentStartDateTime;
 
     @FXML
-    private TableColumn<Appointment, Timestamp> appointmentEndDateTime;
+    private TableColumn<Appointment, LocalDateTime> appointmentEndDateTime;
 
     @FXML
     private TableColumn<Appointment, Integer> appointmentCustomerId;
 
     @FXML
-    private ListView<Customer> customerListView;
+    private TableView<Customer> customerTableView;
 
     @FXML
-    private Label loadingLbl;
+    private TableColumn<Customer, Integer> customerIdTableColumn;
 
     @FXML
-    private Font x3;
+    private TableColumn<Customer, String> customerNameTableColumn;
 
     @FXML
-    private Color x4;
+    private TableColumn<Customer, String> customerAddressTableColumn;
 
     @FXML
-    private Label errorLabel;
+    private TableColumn<Customer, String> divisionNameTableColumn;
 
     @FXML
-    void initialize() {
-        LOGGER.log(Level.FINE, "Started Loading Data");
-
-        assert fileMenu != null : "fx:id=\"fileMenu\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert addMenu != null : "fx:id=\"addMenu\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert newAppointmentMenuItem != null : "fx:id=\"newAppointmentMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert newCustomerMenuItem != null : "fx:id=\"newCustomerMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert logoutMenuItem != null : "fx:id=\"logoutMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert editMenu != null : "fx:id=\"editMenu\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert editAppointmentMenuItem != null : "fx:id=\"editAppointmentMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert editCustomerMenuItem != null : "fx:id=\"editCustomerMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert helpMenu != null : "fx:id=\"helpMenu\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert aboutMenuItem != null : "fx:id=\"aboutMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert usernameLbl != null : "fx:id=\"usernameLbl\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert weekViewRadio != null : "fx:id=\"weekViewRadio\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert CalendarDuration != null : "fx:id=\"CalendarDuration\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert monthViewRadio != null : "fx:id=\"monthViewRadio\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert addMenuButton != null : "fx:id=\"addMenuButton\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert addAppointmentMenuItem != null : "fx:id=\"addAppointmentMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert addCustomerMenuItem != null : "fx:id=\"addCustomerMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert updateMenuButton != null : "fx:id=\"updateMenuButton\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert updateAppointmentMenuItem != null : "fx:id=\"updateAppointmentMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert updateCustomerMenuItem != null : "fx:id=\"updateCustomerMenuItem\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentId != null : "fx:id=\"appointmentId\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentTitle != null : "fx:id=\"appointmentTitle\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentDescription != null : "fx:id=\"appointmentDescription\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentLocation != null : "fx:id=\"appointmentLocation\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentContact != null : "fx:id=\"appointmentContact\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentType != null : "fx:id=\"appointmentType\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentStartDateTime != null : "fx:id=\"appointmentStartDateTime\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentEndDateTime != null : "fx:id=\"appointmentEndDateTime\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert appointmentCustomerId != null : "fx:id=\"appointmentCustomerId\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert customerListView != null : "fx:id=\"customerListView\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert loadingLbl != null : "fx:id=\"loadingLbl\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert x3 != null : "fx:id=\"x3\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert x4 != null : "fx:id=\"x4\" was not injected: check your FXML file 'Calendar.fxml'.";
-        assert errorLabel != null : "fx:id=\"errorLabel\" was not injected: check your FXML file 'Calendar.fxml'.";
-
-        appointmentTableView.setItems(appointments);
-        appointmentId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
-        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contactId"));
-        appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        appointmentStartDateTime.setCellValueFactory(new PropertyValueFactory<>("start"));
-        appointmentEndDateTime.setCellValueFactory(new PropertyValueFactory<>("end"));
-        appointmentCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-
-        customerListView.setItems(customers);
-        customerListView.setCellFactory(param -> new ListCell<>(){
-            @Override
-            protected void updateItem(Customer customer, boolean empty) {
-                super.updateItem(customer, empty);
-
-                if(empty || customer==null || customer.getCustomerName() == null) {
-                    setText(null);
-                } else {
-                    setText(customer.getCustomerName());
-                }
-            }
-        });
-    }
+    private TableColumn<Customer, String> countryTableColumn;
 
     @FXML
-    void addCustomer() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../Views/CustomerDetails.fxml"));
-        Parent newRoot = loader.load();
+    private TableColumn<Customer, String> postalCodeTableColumn;
 
-        CustomerDetails controller = loader.getController();
-        Consumer<Customer> onComplete = result -> {
-            result.setLastUpdatedBy(user.getUsername());
-            result.setCreatedBy(user.getUsername());
-            if(customerDao.insert(result)) {
-                customers.add(result);
-            }
-        };
-        controller.initializeData(null, onComplete);
+    @FXML
+    private TableColumn<Customer, String> phoneNumberTableColumn;
 
-        Stage newStage = new Stage();
-        newStage.setScene(new Scene(newRoot));
-        newStage.setTitle(MESSAGES.getString("Title") + " : " + MESSAGES.getString("AddCustomer"));
-        newStage.setResizable(false);
-        newStage.initStyle(StageStyle.DECORATED);
-
-        newStage.show();
-    }
+    @FXML
+    private Label currentDateLbl;
 
     @FXML
     void addAppointment() throws IOException {
@@ -242,14 +116,22 @@ public class Calendar {
 
         AppointmentDetails controller = loader.getController();
         Consumer<Appointment> onComplete = result -> {
+            if(isConflict(result)){
+                Alerts.information("Unable to create appointment.\nCustomer has a scheduling conflict.\nPlease try rescheduling.");
+                System.out.println("Appointment has a conflict canceling appointment creation.");
+                return;
+            }
+
             result.setCreatedBy(user.getUsername());
             result.setLastUpdateBy(user.getUsername());
+            result.setUserId(user.getId());
+            result.setUser(user.getUsername());
             if(appointmentDao.insert(result)) {
                 appointments.add(result);
             }
         };
 
-        controller.initializeData(null, onComplete);
+        controller.initializeData(null, customers, onComplete);
 
         Stage newStage = new Stage();
         newStage.setScene(new Scene(newRoot));
@@ -261,95 +143,164 @@ public class Calendar {
     }
 
     @FXML
-    void updateCustomer() throws IOException {
-        Customer customer = customerListView.getSelectionModel().getSelectedItem();
-        if(customer != null) {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("../Views/CustomerDetails.fxml"));
-            Parent newRoot = loader.load();
+    void addCustomer() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../Views/CustomerDetails.fxml"));
+        Parent newRoot = loader.load();
 
-            CustomerDetails controller = loader.getController();
-            Consumer<Customer> onComplete = result -> {
-                result.setLastUpdatedBy(user.getUsername());
+        CustomerDetails controller = loader.getController();
+        Consumer<Customer> onComplete = result -> {
+            result.setLastUpdatedBy(user.getUsername());
+
+            if(result.getCreatedBy() == null)
                 result.setCreatedBy(user.getUsername());
 
-                if(customerDao.update(result)){
-                    customers.set(customers.indexOf(customer), result);
-                }
-            };
+            if(customerDao.insert(result))
+                customers.add(result);
+        };
 
-            controller.initializeData(customer, onComplete);
+        controller.initializeData(null, onComplete);
 
-            Stage newStage = new Stage();
-            newStage.setScene(new Scene(newRoot));
-            newStage.setTitle(MESSAGES.getString("Title") + " : " + MESSAGES.getString("UpdateCustomer"));
-            newStage.setResizable(false);
-            newStage.initStyle(StageStyle.DECORATED);
-
-            newStage.show();
-        } else {
-            //TODO: Alerts user that a customer must be selected
-            LOGGER.log(Level.INFO, "Customer not selected. Customer must be selected.");
-        }
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(newRoot));
+        newStage.setTitle(MESSAGES.getString("Title") + " : " + MESSAGES.getString("AddCustomer"));
+        newStage.setResizable(false);
+        newStage.initStyle(StageStyle.DECORATED);
+        newStage.show();
     }
 
     @FXML
-    void exitApplication() {
-        if (Alerts.confirmation(Alerts.ConfirmType.EXIT)) {
-            Platform.exit();
+    void deleteAppointment() {
+        if(!Alerts.confirmation(Alerts.ConfirmType.DELETE)){
+            return;
         }
+        Appointment appointment = appointmentTableView.getSelectionModel().getSelectedItem();
+
+        if(appointment == null) {
+            Alerts.information("Must select an appointment first.");
+            return;
+        }
+
+        if(!appointmentDao.delete(appointment.getId())) {
+            Alerts.information("Unable to delete Appointment.\nIf issue persists please contact support.");
+            return;
+        }
+
+        appointments.remove(appointment);
+    }
+
+    @FXML
+    void deleteCustomer() {
+        if(!Alerts.confirmation(Alerts.ConfirmType.DELETE))
+            return;
+
+        Customer customer = customerTableView.getSelectionModel().getSelectedItem();
+
+        if(customer == null) {
+            Alerts.information("Must select a customer first");
+            return;
+        }
+
+        if(appointments.stream().anyMatch(appointment -> appointment.getCustomerId() == customer.getId())) {
+            if(!Alerts.customConfirmation("Delete All Appointments?", "This customer still has appointments.\nDeleting customer will also delete all appointments. Continue?"))
+                return;
+            if(appointmentDao.deleteAll(customer.getId()))
+                appointments.removeIf(appointment -> appointment.getCustomerId() == customer.getId());
+        }
+
+        if(!customerDao.delete(customer.getId()))
+            Alerts.information("Unable to delete Customer.\nIf issue persists please contact support.");
+        customers.remove(customer);
+    }
+
+    @FXML
+    void switchCalendarDuration() {
+        RadioButton selected = (RadioButton) CalendarDuration.getSelectedToggle();
+
+        filteredAppointments.setPredicate(appointment -> {
+            if (selected.getText().equals("Week")) {
+                return appointment.getStart().isAfter(LocalDate.now().atStartOfDay()) && appointment.getStart().isBefore(LocalDateTime.now().plusDays(7));
+            }
+            if (selected.getText().equals("Month")) {
+                return appointment.getStart().isAfter(LocalDate.now().atStartOfDay()) && appointment.getStart().isBefore(LocalDateTime.now().plusMonths(1));
+            }
+            return true;
+        });
     }
 
     @FXML
     void updateAppointment() throws IOException {
         Appointment appointment = appointmentTableView.getSelectionModel().getSelectedItem();
-        if(appointment != null) {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("../Views/AppointmentDetails.fxml"));
-            Parent newRoot = loader.load();
+        Consumer<Appointment> onComplete = result -> {
+            result.setCreatedBy(user.getUsername());
+            result.setLastUpdateBy(user.getUsername());
+            if(appointmentDao.update(result)) {
+                appointments.set(appointments.indexOf(appointment), result);
+            }
+        };
 
-            AppointmentDetails controller = loader.getController();
-            Consumer<Appointment> onComplete = result -> {
-                result.setCreatedBy(user.getUsername());
-                result.setLastUpdateBy(user.getUsername());
-                if(appointmentDao.update(result)) {
-                    appointments.set(appointments.indexOf(appointment), result);
-                }
-            };
-
-            controller.initializeData(appointment, onComplete);
-
-            Stage newStage = new Stage();
-            newStage.setScene(new Scene(newRoot));
-            newStage.setTitle(MESSAGES.getString("Title") + " : " + MESSAGES.getString("UpdateAppointment"));
-            newStage.setResizable(false);
-            newStage.initStyle(StageStyle.DECORATED);
-
-            newStage.show();
-        } else {
-            // TODO: Alerts User to Select an appiontment from the table
+        if(appointment == null) {
             LOGGER.log(Level.INFO, "Appointment not selected. Appointment must be selected.");
+            return;
         }
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../Views/AppointmentDetails.fxml"));
+        Parent newRoot = loader.load();
+
+        AppointmentDetails controller = loader.getController();
+        controller.initializeData(appointment, customers, onComplete);
+
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(newRoot));
+        newStage.setTitle(MESSAGES.getString("Title") + " : " + MESSAGES.getString("UpdateAppointment"));
+        newStage.setResizable(false);
+        newStage.initStyle(StageStyle.DECORATED);
+
+        newStage.show();
     }
 
-    private void loadCustomers() {
-        loadingLbl.setText(MESSAGES.getString("LoadCustomers"));
-        LOGGER.log(Level.FINE, "Started Loading Customers");
+    @FXML
+    void updateCustomer() throws IOException {
+        Customer customer = customerTableView.getSelectionModel().getSelectedItem();
 
-        ObservableList<Customer> customerList = customerDao.getAll();
-        customers.addAll(customerList);
+        if(customer == null) {
+            LOGGER.log(Level.INFO, "Customer not selected. Customer must be selected.");
+            return;
+        }
 
-        LOGGER.log(Level.FINE, "Finished Loading Customers");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../Views/CustomerDetails.fxml"));
+        Parent newRoot = loader.load();
+
+        CustomerDetails controller = loader.getController();
+        Consumer<Customer> onComplete = result -> {
+            result.setLastUpdatedBy(user.getUsername());
+
+            if(customerDao.update(result)){
+                customers.set(customers.indexOf(customer), result);
+            }
+        };
+
+        controller.initializeData(customer, onComplete);
+
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(newRoot));
+        newStage.setTitle(MESSAGES.getString("Title") + " : " + MESSAGES.getString("UpdateCustomer"));
+        newStage.setResizable(false);
+        newStage.initStyle(StageStyle.DECORATED);
+
+        newStage.show();
     }
 
-    private void loadAppointments() {
-        loadingLbl.setText(MESSAGES.getString("LoadAppointments"));
-        LOGGER.log(Level.FINE, "Started Loading Appointments");
+    @FXML
+    void initialize() {
+        currentDateLbl.setText(LocalDate.now().format(dateFormat));
 
-        ObservableList<Appointment> appointmentList = appointmentDao.getAll();
-        appointments.addAll(appointmentList);
+        initializeAppointmentTable();
+        initializeCustomerTable();
 
-        LOGGER.log(Level.FINE, "Finished Loading Appointments");
+        switchCalendarDuration();
     }
 
     public void initializeData(User user) {
@@ -359,7 +310,98 @@ public class Calendar {
         loadCustomers();
         loadAppointments();
 
-        LOGGER.log(Level.FINE, "Finished Loading Data");
-        loadingLbl.setText("");
+        if(hasUpcomingAppointment()) {
+            Alerts.information("You have a meeting coming up in the next 15 minutes.");
+        }
+    }
+
+    private boolean hasUpcomingAppointment() {
+        return appointments.stream()
+                .filter(appointment -> appointment.getUserId() == user.getId() && appointment.getStart().toLocalDate().isEqual(LocalDate.now()))
+                .anyMatch(appointment -> appointment.getStart().toLocalTime().isBefore(LocalTime.now().plusMinutes(15)));
+    }
+
+    private void initializeCustomerTable() {
+        customerTableView.setItems(customers);
+        customerIdTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+        postalCodeTableColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        phoneNumberTableColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        divisionNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("division"));
+        countryTableColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+    }
+
+    private void initializeAppointmentTable() {
+        appointmentTableView.setItems(filteredAppointments);
+        appointmentId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        appointmentStartDateTime.setCellValueFactory(new PropertyValueFactory<>("start"));
+        appointmentStartDateTime.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<Appointment, LocalDateTime> call(TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            setText(item.atZone(ZoneId.systemDefault()).format(dateTimeFormat));
+                        }
+                    }
+                };
+            }
+        });
+
+        appointmentEndDateTime.setCellValueFactory(new PropertyValueFactory<>("end"));
+        appointmentEndDateTime.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<Appointment, LocalDateTime> call(TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            setText(item.atZone(ZoneId.systemDefault()).format(dateTimeFormat));
+                        }
+                    }
+                };
+            }
+        });
+
+        appointmentCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+    }
+
+    private boolean isConflict(Appointment result) {
+        return appointments.stream()
+                .filter(
+                        appointment -> appointment.getCustomerId() == result.getCustomerId() && (
+                                appointment.getStart().toLocalDate().equals(result.getStart().toLocalDate()) ||
+                                        appointment.getEnd().toLocalDate().equals(result.getEnd().toLocalDate())
+                        )
+                )
+                .anyMatch(
+                        appointment -> appointment.getStart().isEqual(result.getStart()) || appointment.getEnd().isEqual(result.getEnd())
+                        || appointment.getStart().isBefore(result.getStart()) || appointment.getEnd().isBefore(result.getEnd())
+                );
+    }
+
+    private void loadCustomers() {
+        ObservableList<Customer> customerList = customerDao.getAll();
+        customers.addAll(customerList);
+    }
+
+    private void loadAppointments() {
+        ObservableList<Appointment> appointmentList = appointmentDao.getAll();
+        appointments.addAll(appointmentList);
     }
 }

@@ -15,27 +15,21 @@ public class Appointment {
     private LocalDateTime lastUpdate;
     private String lastUpdateBy;
     private int customerId;
+    private String customer;
     private int contactId;
+    private String contact;
     private int userId;
+    private String user;
 
     public Appointment() {
-        this.id = -1;
-        this.title = null;
-        this.description = null;
-        this.location = null;
-        this.type = null;
-        this.start = null;
-        this.end = null;
-        this.created = null;
-        this.createdBy = null;
-        this.lastUpdate = null;
-        this.lastUpdateBy = null;
-        this.customerId = -1;
-        this.contactId = -1;
-        this.userId = -1;
+        this(-1, null, null, null, null, null, null, null, null, null,null,  -1, null, -1, null, -1, null);
     }
 
-    public Appointment(int id, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, LocalDateTime created, String createdBy, LocalDateTime lastUpdate, String lastUpdateBy, int customerId, int contactId, int userId) {
+    public Appointment(
+            int id, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, LocalDateTime created, String createdBy, LocalDateTime lastUpdate, String lastUpdateBy,
+            int customerId, String customer,
+            int contactId, String contact,
+            int userId, String user) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -48,8 +42,11 @@ public class Appointment {
         this.lastUpdate = lastUpdate;
         this.lastUpdateBy = lastUpdateBy;
         this.customerId = customerId;
+        this.customer = customer;
         this.contactId = contactId;
+        this.contact = contact;
         this.userId = userId;
+        this.user = user;
     }
 
     public int getId() {
@@ -148,6 +145,14 @@ public class Appointment {
         this.customerId = customerId;
     }
 
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
     public int getContactId() {
         return contactId;
     }
@@ -156,11 +161,31 @@ public class Appointment {
         this.contactId = contactId;
     }
 
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public int getCustomerID() {
+        return customerId;
     }
 }

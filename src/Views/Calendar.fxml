@@ -32,6 +32,7 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
@@ -83,6 +84,7 @@
                   <MenuItem fx:id="deleteCustomerMenuItem" mnemonicParsing="false" onAction="#deleteCustomer" text="Customer" />
                </items>
             </MenuButton>
+            <Button fx:id="reportsButton" mnemonicParsing="false" onMouseClicked="#showReports" text="Reports" />
          </buttons>
       </ButtonBar>
       <VBox layoutX="22.0" layoutY="78.0" spacing="14.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="100.0">

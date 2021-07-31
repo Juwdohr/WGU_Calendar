@@ -109,6 +109,14 @@ public class Calendar {
     private Label currentDateLbl;
 
     @FXML
+    private Button reportsButton;
+
+    @FXML
+    void showReports() {
+        Alerts.information("Show Reports");
+    }
+
+    @FXML
     void addAppointment() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../Views/AppointmentDetails.fxml"));

@@ -1,24 +1,22 @@
 package Models;
 
-import java.time.*;
-
 public class Report {
-    Month month;
+    long date;
     String type;
     long total;
 
-    public Report(Month month, String type, long total) {
-        this.month = month;
+    public Report(long date, String type, long total) {
+        this.date = date;
         this.type = type;
         this.total = total;
     }
 
-    public Month getMonth() {
-        return month;
+    public long getDate() {
+        return date;
     }
 
-    public void setMonth(Month month) {
-        this.month = month;
+    public void setDate(long date) {
+        this.date = date;
     }
 
     public String getType() {

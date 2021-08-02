@@ -96,12 +96,12 @@ public class Reports {
 
         typeMonthReportTable.setItems(typeMonthReport);
         appointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        typeMonthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        typeMonthColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         typeByMonthAmountTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
 
         contactYearReportTable.setItems(contactYearReport);
         contactColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        contactYearColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        contactYearColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         appointmentsByYearTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
     }
     private void initializeContacts() {

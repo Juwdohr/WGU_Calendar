@@ -26,6 +26,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -107,6 +108,20 @@ public class Calendar {
 
     @FXML
     private Label currentDateLbl;
+
+    @FXML
+    private Button reportsButton;
+
+    @FXML
+    void showReports() throws IOException {
+        Stage newStage = new Stage();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../Views/Reports.fxml")));
+        newStage.setScene(new Scene(root));
+        newStage.setResizable(false);
+        newStage.setTitle(MESSAGES.getString("Title") + " : Reports");
+        newStage.initStyle(StageStyle.DECORATED);
+        newStage.show();
+    }
 
     @FXML
     void addAppointment() throws IOException {

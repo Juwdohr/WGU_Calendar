@@ -1,96 +1,200 @@
 package Controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
+import Models.Appointment;
+import Models.Contact;
+import Models.Report;
+import Utilities.Database.AppointmentDao;
+import Utilities.Database.ContactDao;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Reports {
 
     @FXML
-    private ResourceBundle resources;
+    private ComboBox<Contact> contactComboBox;
 
     @FXML
-    private URL location;
+    private TableView<Appointment> scheduleTable;
 
     @FXML
-    private ComboBox<?> contactComboBox;
+    private TableColumn<Appointment, Integer> idColumn;
 
     @FXML
-    private TableView<?> scheduleTable;
+    private TableColumn<Appointment, String> titleColumn;
 
     @FXML
-    private TableColumn<?, ?> idColumn;
+    private TableColumn<Appointment, String> typeColumn;
 
     @FXML
-    private TableColumn<?, ?> titleColumn;
+    private TableColumn<Appointment, String> descriptionColumn;
 
     @FXML
-    private TableColumn<?, ?> typeColumn;
+    private TableColumn<Appointment, LocalDateTime> startColumn;
 
     @FXML
-    private TableColumn<?, ?> descriptionColumn;
+    private TableColumn<Appointment, LocalDateTime> endColumn;
 
     @FXML
-    private TableColumn<?, ?> startColumn;
+    private TableColumn<Appointment, Integer> customerColumn;
 
     @FXML
-    private TableColumn<?, ?> endColumn;
+    private TableView<Report> typeMonthReportTable;
 
     @FXML
-    private TableColumn<?, ?> customerColumn;
+    private TableColumn<Report, String> appointmentTypeColumn;
 
     @FXML
-    private TableView<?> typeMonthReportTable;
+    private TableColumn<Report, Month> typeMonthColumn;
 
     @FXML
-    private TableColumn<?, ?> appointmentTypeColumn;
+    private TableColumn<Report, Integer> typeByMonthAmountTotalColumn;
 
     @FXML
-    private TableColumn<?, ?> typeMonthColumn;
+    private TableView<Report> contactYearReportTable;
 
     @FXML
-    private TableColumn<?, ?> typeByMonthAmountTotalColumn;
+    private TableColumn<Report, String> contactColumn;
 
     @FXML
-    private TableView<?> contactYearReportTable;
+    private TableColumn<Report, Year> contactYearColumn;
 
     @FXML
-    private TableColumn<?, ?> contactColumn;
+    private TableColumn<Report, Integer> appointmentsByYearTotalColumn;
+
+    private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a z");
+    private final ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+    private final FilteredList<Appointment> filteredAppointments = new FilteredList<>(appointments);
+    private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
+    private final ObservableList typeMonthReport = FXCollections.observableArrayList();
+    private final ObservableList contactYearReport = FXCollections.observableArrayList();
+    private final AppointmentDao appointmentDao = new AppointmentDao();
 
     @FXML
-    private TableColumn<?, ?> yearColumn;
-
-    @FXML
-    private TableColumn<?, ?> appointmentsByYearTotalColumn;
-
-    @FXML
-    void selectContactSchedule(ActionEvent event) {
-
+    void selectContactSchedule() {
+        Contact selected = contactComboBox.getSelectionModel().getSelectedItem();
+        if(selected != null) filteredAppointments.setPredicate(appointment -> appointment.getContactId() == selected.getId());
     }
 
     @FXML
     void initialize() {
-        assert contactComboBox != null : "fx:id=\"contactComboBox\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert scheduleTable != null : "fx:id=\"scheduleTable\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert idColumn != null : "fx:id=\"idColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert titleColumn != null : "fx:id=\"titleColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert typeColumn != null : "fx:id=\"typeColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert descriptionColumn != null : "fx:id=\"descriptionColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert startColumn != null : "fx:id=\"startColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert endColumn != null : "fx:id=\"endColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert customerColumn != null : "fx:id=\"customerColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert typeMonthReportTable != null : "fx:id=\"typeMonthReportTable\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert appointmentTypeColumn != null : "fx:id=\"appointmentTypeColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert typeMonthColumn != null : "fx:id=\"typeMonthColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert typeByMonthAmountTotalColumn != null : "fx:id=\"typeByMonthAmountTotalColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert contactYearReportTable != null : "fx:id=\"contactYearReportTable\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert contactColumn != null : "fx:id=\"contactColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert yearColumn != null : "fx:id=\"yearColumn\" was not injected: check your FXML file 'Reports.fxml'.";
-        assert appointmentsByYearTotalColumn != null : "fx:id=\"appointmentsByYearTotalColumn\" was not injected: check your FXML file 'Reports.fxml'.";
+        initializeContacts();
+        initializeAppointments();
+        initializeContactComboBox();
+        initializeTypeMonthReport();
+        initializeContactYearReport();
 
+        typeMonthReportTable.setItems(typeMonthReport);
+        appointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        typeMonthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        typeByMonthAmountTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+
+        contactYearReportTable.setItems(contactYearReport);
+        contactColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        contactYearColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        appointmentsByYearTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+    }
+    private void initializeContacts() {
+        ContactDao contactDao = new ContactDao();
+        contacts.addAll(contactDao.getAll());
+    }
+
+    private void initializeAppointments() {
+        appointments.addAll(appointmentDao.getAll());
+        scheduleTable.setItems(filteredAppointments);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        startColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
+        startColumn.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<Appointment, LocalDateTime> call(TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            setText(item.atZone(ZoneId.systemDefault()).format(dateTimeFormat));
+                        }
+                    }
+                };
+            }
+        });
+        endColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
+        endColumn.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<Appointment, LocalDateTime> call(TableColumn<Appointment, LocalDateTime> appointmentLocalDateTimeTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            setText(item.atZone(ZoneId.systemDefault()).format(dateTimeFormat));
+                        }
+                    }
+                };
+            }
+        });
+        customerColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+    }
+
+    private void initializeContactComboBox() {
+        contactComboBox.setItems(contacts);
+        contactComboBox.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<Contact> call(ListView<Contact> contactListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(Contact item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if(item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item.getName());
+                        }
+                    }
+                };
+            }
+        });
+        contactComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Contact item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item.getName());
+                }
+            }
+        });
+        contactComboBox.getSelectionModel().selectFirst();
+        selectContactSchedule();
+    }
+
+    private void initializeTypeMonthReport() {
+        typeMonthReport.addAll(appointmentDao.generateTypeMonthReport());
+    }
+
+    private void initializeContactYearReport() {
+        contactYearReport.addAll(appointmentDao.generateContactYearReport());
     }
 }

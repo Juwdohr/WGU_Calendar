@@ -1,10 +1,12 @@
 package Utilities.Database;
 
 import Models.Appointment;
+import Models.Report;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class AppointmentDao implements DAO<Appointment>{
@@ -158,5 +160,47 @@ public class AppointmentDao implements DAO<Appointment>{
         }
 
         return false;
+    }
+
+    public ArrayList generateTypeMonthReport() {
+        try(Connection connection = DBConnection.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet results = statement.executeQuery("Select month(start) as month, type, count(*) as total from appointments GROUP BY month, type;");
+
+            ArrayList<Report> typeMonthReport = new ArrayList<>();
+
+            while(results.next()) {
+                Report row = new Report(results.getDate("month").toLocalDate().getMonth(), results.getString("type"), results.getLong("total"));
+                typeMonthReport.add(row);
+            }
+
+            return typeMonthReport;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+    public ArrayList generateContactYearReport() {
+        try(Connection connection = DBConnection.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet results = statement.executeQuery("Select month(start) as month, contacts.Contact_Name as Contact, count(*) as total from appointments JOIN contacts on contacts.Contact_ID=appointments.Contact_ID GROUP BY month, contact;");
+
+            ArrayList<Report> typeMonthReport = new ArrayList<>();
+
+            while(results.next()) {
+                Report row = new Report(results.getDate("month").toLocalDate().getMonth(), results.getString("type"), results.getLong("total"));
+                typeMonthReport.add(row);
+            }
+
+            return typeMonthReport;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 }

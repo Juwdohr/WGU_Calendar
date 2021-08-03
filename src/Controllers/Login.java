@@ -26,10 +26,17 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Login Screen Controller
+ */
 public class Login {
 
+    /** Current Locale for internationalization. */
     private final static Locale CURRENT_LOCALE = Locale.getDefault();
+    /** Logger for application. */
     private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
+
+    /** Resource Bundle for internationalization. */
     private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENT_LOCALE);
 
     @FXML
@@ -53,12 +60,19 @@ public class Login {
     @FXML
     private Text errorMessageTxt;
 
+    /**
+     * Closes the Application.
+     */
     @FXML
     void CloseApplication() {
         Stage stage = (Stage) closeBtn.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Logs in user and switches to the Calendar view.
+     * @throws IOException
+     */
     @FXML
     void LoginUser() throws IOException {
         try {
@@ -89,22 +103,20 @@ public class Login {
 
     }
 
+    /**
+     * Initializes the Login screen.
+     * Event handlers use a Lambda Function to allow the user to press the
+     * Enter KEY to attempt to log in to the application.
+     */
     @FXML
     void initialize() {
-        assert programTitle != null : "fx:id=\"programTitle\" was not injected: check your FXML file 'Login.fxml'.";
-        assert zoneIdLbl != null : "fx:id=\"zoneIdLbl\" was not injected: check your FXML file 'Login.fxml'.";
-        assert usernameTextField != null : "fx:id=\"usernameTextField\" was not injected: check your FXML file 'Login.fxml'.";
-        assert passwordTextField != null : "fx:id=\"passwordTextField\" was not injected: check your FXML file 'Login.fxml'.";
-        assert loginBtn != null : "fx:id=\"loginBtn\" was not injected: check your FXML file 'Login.fxml'.";
-        assert closeBtn != null : "fx:id=\"closeBtn\" was not injected: check your FXML file 'Login.fxml'.";
-        assert errorMessageTxt != null : "fx:id=\"errorMessageTxt\" was not injected: check your FXML file 'Login.fxml'.";
         errorMessageTxt.setText("");
         programTitle.setText(MESSAGES.getString("Title"));
         usernameTextField.setPromptText(MESSAGES.getString("UsernamePrompt"));
         passwordTextField.setPromptText(MESSAGES.getString("PasswordPrompt"));
         zoneIdLbl.setText(ZoneId.systemDefault().toString());
 
-        //Allows a user press the enter key to login to application.
+        /** Allows a user press the enter key on the Username TextField to log in to application. */
         usernameTextField.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {
             if(ev.getCode() == KeyCode.ENTER) {
                 try{
@@ -114,6 +126,7 @@ public class Login {
                 }
             }
         });
+        /** Allows a user press the enter key on the Password TextField to log in to application. */
         passwordTextField.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {
             if(ev.getCode() == KeyCode.ENTER) {
                 try{
@@ -123,6 +136,7 @@ public class Login {
                 }
             }
         });
+        /** Allows a user press the enter key on the Login Button to log in to application. */
         loginBtn.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {
             if(ev.getCode() == KeyCode.ENTER) {
                 try{
@@ -134,6 +148,13 @@ public class Login {
         });
     }
 
+    /**
+     * Retrieves an optional user from the database, and extracts the results from the optional.
+     * @param username Username to search the database for.
+     * @param password Password for the user to match in the database.
+     * @return User who is now logged into the application.
+     * @throws NoSuchElementException Thrown when the user is not found.
+     */
     private User getUser(String username, String password) throws NoSuchElementException {
         UserDao userDao = new UserDao();
         Optional<User> user = userDao.getUserByUserNameAndPassword(username, password);

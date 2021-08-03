@@ -11,7 +11,15 @@ import javafx.stage.StageStyle;
 
 import java.util.Objects;
 
+/**
+ * Main class to startup the Calendar Application
+ */
 public class Main extends Application {
+    /**
+     * Starts the Calendar Application.
+     * @param primaryStage primary stage to start the Application.
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         Logger.initializeLogManager();
@@ -24,9 +32,12 @@ public class Main extends Application {
 
     }
 
-
+    /**
+     * Main method to start the application. Closes the connection to the database
+     * if it is not already closed.
+     * @param args Commandline arguments
+     */
     public static void main(String[] args) {
-        // Locale.setDefault(new Locale("fr"));
         launch(args);
         DBConnection.closeConnection();
     }

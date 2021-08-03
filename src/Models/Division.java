@@ -1,38 +1,72 @@
 package Models;
 
-
+/**
+ * Division Model to hold Division Data
+ */
 public class Division {
+    /** ID of Division. */
     private int id;
-    private String divisionName;
-    private int country;
+    /** Name of division. */
+    private String name;
+    private int countryId;
 
-    public Division(int id, String divisionName, int country) {
+    /**
+     * Constructor of Division.
+     * @param id ID of Division
+     * @param name Name of Division
+     * @param countryId ID of Country that Division belongs to.
+     */
+    public Division(int id, String name, int countryId) {
         this.id = id;
-        this.divisionName = divisionName;
-        this.country = country;
+        this.name = name;
+        this.countryId = countryId;
     }
 
+    /**
+     * Retrieves the ID of the division.
+     * @return ID of division.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets Division ID.
+     * @param id ID of Division.
+     */
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getDivisionName() {
-        return divisionName;
+    /**
+     * Retrieves name of Division.
+     * @return Division Name.
+     */
+    public String getName() {
+        return name;
     }
 
-    public void setDivisionName(String divisionName) {
-        this.divisionName = divisionName;
+    /**
+     * Sets division name.
+     * @param name Name of Division.
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
+    /**
+     * Retieves Country ID
+     * @return ID of Country that the Division belongs to.
+     */
     public int getCountryId() {
-        return country;
+        return countryId;
     }
 
-    public void setCountry(int country) {
-        this.country = country;
+    /**
+     * Sets the Country ID.
+     * @param countryId ID of Country.
+     */
+    public void setCountryID(int countryId) {
+        this.countryId = countryId;
     }
 }

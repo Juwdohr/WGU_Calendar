@@ -10,6 +10,12 @@ import java.util.Optional;
 
 public class CustomerDao implements DAO<Customer>{
 
+    /**
+     * Extracts Customer Data from results obtained from the database.
+     * @param results Contains the data for a customer from the database.
+     * @return Customer object built from database data.
+     * @throws SQLException
+     */
     private Customer extractFromResults(ResultSet results) throws SQLException {
         return new Customer(
             results.getInt("Customer_ID"),
@@ -28,6 +34,11 @@ public class CustomerDao implements DAO<Customer>{
         );
     }
 
+    /**
+     * Retrieves a single customer from the Database.
+     * @param id ID of the Customer to retrieve from Database.
+     * @return Returns an Optional containing the Customer.
+     */
     @Override
     public Optional<Customer> get(int id) {
         try(Connection connection = DBConnection.getConnection()){
@@ -45,6 +56,10 @@ public class CustomerDao implements DAO<Customer>{
         return Optional.empty();
     }
 
+    /**
+     * Retrieves all Customers from the Database.
+     * @return An ObservableList containing all Customers retrieved from the database.
+     */
     @Override
     public ObservableList<Customer> getAll() {
         try (Connection connection = DBConnection.getConnection()){
@@ -67,6 +82,11 @@ public class CustomerDao implements DAO<Customer>{
         return FXCollections.observableArrayList();
     }
 
+    /**
+     * Inserts a single Customer into database.
+     * @param customer Customer Object to insert into database.
+     * @return True if Country was successfully inserted, false otherwise.
+     */
     @Override
     public boolean insert(Customer customer) {
         try(Connection connection = DBConnection.getConnection()){
@@ -96,6 +116,11 @@ public class CustomerDao implements DAO<Customer>{
         return false;
     }
 
+    /**
+     * Updates a customer in the database.
+     * @param customer Customer Data to update in Database
+     * @return True if Country was successfully updated, false otherwise.
+     */
     @Override
     public boolean update(Customer customer) {
         try(Connection connection = DBConnection.getConnection()){
@@ -123,6 +148,11 @@ public class CustomerDao implements DAO<Customer>{
         return false;
     }
 
+    /**
+     * Deletes a single Customer from database.
+     * @param id ID of Customer to delete from database.
+     * @return True if Country was successfully deleted, false otherwise.
+     */
     @Override
     public boolean delete(int id) {
         try(Connection connection = DBConnection.getConnection()){

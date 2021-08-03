@@ -19,14 +19,31 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
+/**
+ * Appointment Details Screen.
+ * Creates/Updates Appointments.
+ */
 public class AppointmentDetails {
 
+    /** Appointment to be Created or updated */
     private Appointment appointment = null;
+
+    /** Consumer to pass appointment back to the calling controller. */
     private Consumer<Appointment> onComplete;
+
+    /** ObservableList to hold all Customers from the database. */
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
+
+    /** ObservableList to hold all contacts from the database. */
     private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
+
+    /** ObservableList to hold all start times. */
     private final ObservableList<LocalTime> startTimeList = FXCollections.observableArrayList();
+
+    /** ObservableList to hold all end times. */
     private final ObservableList<LocalTime> endTimeList = FXCollections.observableArrayList();
+
+    /** Time formatter to standard time format. */
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
 
     @FXML

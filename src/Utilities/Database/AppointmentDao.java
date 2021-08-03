@@ -7,8 +7,16 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.util.Optional;
 
+/**
+ * Creates a Data Access Object for appointments.
+ */
 public class AppointmentDao implements DAO<Appointment>{
-
+    /**
+     * Extract from results takes a ResultSet object and pulls the appointment data out.
+     * @param results Contains the results of appointments retrieved.
+     * @return Appointment extracted from results.
+     * @throws SQLException
+     */
     private static Appointment extractFromResults(ResultSet results) throws SQLException {
         return new Appointment(
                 results.getInt("Appointment_ID"),
@@ -31,6 +39,11 @@ public class AppointmentDao implements DAO<Appointment>{
         );
     }
 
+    /**
+     * Fetches a specific appointment.
+     * @param id ID of a specific appointment to get.
+     * @return An Optional either empty or containing a specific appointment with the ID.
+     */
     @Override
     public Optional<Appointment> get(int id) {
         try(Connection connection = DBConnection.getConnection()){
@@ -47,6 +60,10 @@ public class AppointmentDao implements DAO<Appointment>{
         return Optional.empty();
     }
 
+    /**
+     * getAll fetches all appointments from Database.
+     * @return An ObservableList of appointments.
+     */
     @Override
     public ObservableList<Appointment> getAll() {
         try(Connection connection = DBConnection.getConnection()){
@@ -68,6 +85,11 @@ public class AppointmentDao implements DAO<Appointment>{
         return FXCollections.observableArrayList();
     }
 
+    /**
+     * Inserts an appointment into a  database.
+     * @param appointment Appointment to insert into database.
+     * @return Returns true if appointment was added, otherwise returns false.
+     */
     @Override
     public boolean insert(Appointment appointment) {
         try(Connection connection = DBConnection.getConnection()){
@@ -101,6 +123,11 @@ public class AppointmentDao implements DAO<Appointment>{
         return false;
     }
 
+    /**
+     * Updates an appointment in database.
+     * @param appointment Appointment to update.
+     * @return Returns true if appointment was Updated, otherwise returns false.
+     */
     @Override
     public boolean update(Appointment appointment){
         try(Connection connection = DBConnection.getConnection()) {
@@ -131,6 +158,11 @@ public class AppointmentDao implements DAO<Appointment>{
         return false;
     }
 
+    /**
+     * Deletes a single appointment from Database.
+     * @param id ID of appointment to delete.
+     * @return True if appointment was deleted, otherwise returns false
+     */
     @Override
     public boolean delete(int id) {
         try(Connection connection = DBConnection.getConnection()) {
@@ -146,13 +178,18 @@ public class AppointmentDao implements DAO<Appointment>{
         return false;
     }
 
+    /**
+     * Deletes all appointments from database of a specific Customer.
+     * @param customerId ID of Customer to delete.
+     * @return True if all appointments were deleted, otherwise returns false.
+     */
     public boolean deleteAll(int customerId) {
         try(Connection connection = DBConnection.getConnection()) {
             Statement statement = connection.createStatement();
             int result = statement.executeUpdate("DELETE FROM appointments WHERE Customer_ID=" + customerId);
-            System.out.println(result);
 
             if(result > 0) return true;
+
         } catch(SQLException ex) {
             ex.printStackTrace();
         }

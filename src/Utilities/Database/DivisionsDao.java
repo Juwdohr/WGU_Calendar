@@ -10,7 +10,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
+/**
+ * DOA implementation for First Level Divisions (States/Provinces).
+ */
 public class DivisionsDao implements DAO<Division>{
+    /**
+     * Extracts Division Object from results.
+     * @param results Results containing Division Data.
+     * @return Division object to be used.
+     */
     private Division extractFromResults(ResultSet results) throws SQLException {
         return new Division(
                 results.getInt("Division_ID"),
@@ -19,6 +27,11 @@ public class DivisionsDao implements DAO<Division>{
         );
     }
 
+    /**
+     * Retrieves single Division, based on ID.
+     * @param id ID of Division to retrieve.
+     * @return Optional Division.
+     */
     @Override
     public Optional<Division> get(int id) {
         try (Connection connection = DBConnection.getConnection()) {
@@ -35,6 +48,10 @@ public class DivisionsDao implements DAO<Division>{
         return Optional.empty();
     }
 
+    /**
+     * Retrieves all Divisions in Database.
+     * @return ObservableList containing all Divisions retrieved from Database.
+     */
     @Override
     public ObservableList<Division> getAll() {
         try (Connection connection = DBConnection.getConnection()){
@@ -56,16 +73,34 @@ public class DivisionsDao implements DAO<Division>{
         return FXCollections.observableArrayList();
     }
 
+    /**
+     * Inserts Division into database.
+     * This feature is not implemented at this time.
+     * @param division Division Object to insert into database.
+     * @return True if division was successfully inserted, false otherwise.
+     */
     @Override
     public boolean insert(Division division) {
         return false;
     }
 
+    /**
+     * Updates a division in the database.
+     * This feature is not implemented at this time.
+     * @param division Division Object to update in database.
+     * @return True if contact was successfully updated, false otherwise.
+     */
     @Override
     public boolean update(Division division) {
         return false;
     }
 
+    /**
+     * Deletes a single division from database.
+     * This feature is not implemented at this time.
+     * @param id ID of Division to delete.
+     * @return True if contact was successfully deleted, false otherwise.
+     */
     @Override
     public boolean delete(int id) {
         return false;

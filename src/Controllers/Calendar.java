@@ -25,10 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +36,7 @@ public class Calendar {
 
     /** DateTimeFormatter to format the dates to MM/dd/yyyy. */
     private final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    /** DateTimeFormatter to fromat Date & Time to MM/dd/yyyy h:mm a z */
+    /** DateTimeFormatter to format Date & Time to MM/dd/yyyy h:mm a z */
     private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a z");
     /** Creates a Logger object for this class. */
     private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
@@ -474,7 +471,7 @@ public class Calendar {
 
     /**
      * Checks to see if the Appointment has a conflict with an existing appointment.
-     * @lambda filter filters the appointments with results CustomerID, and
+     * @lambda filters the appointments with results CustomerID, and
      * either the start or end Dates are the same as the results.
      * @lambda anyMatch checks against multiple factors to see if the times of the
      * filtered appointments are conflicts for the Appointment results.
@@ -484,15 +481,16 @@ public class Calendar {
      */
     private boolean isConflict(Appointment result) {
         return appointments.stream()
-                .filter(
-                        appointment -> appointment.getCustomerId() == result.getCustomerId() && (
-                                appointment.getStart().toLocalDate().equals(result.getStart().toLocalDate()) ||
-                                        appointment.getEnd().toLocalDate().equals(result.getEnd().toLocalDate())
+                .filter(appointment -> appointment.getCustomerId() == result.getCustomerId() && (
+                        appointment.getStart().toLocalDate().equals(result.getStart().toLocalDate()) ||
+                                appointment.getEnd().toLocalDate().equals(result.getEnd().toLocalDate())
                         )
                 )
                 .anyMatch(
-                        appointment -> appointment.getStart().isEqual(result.getStart()) || appointment.getEnd().isEqual(result.getEnd())
-                        || appointment.getStart().isBefore(result.getStart()) || appointment.getEnd().isBefore(result.getEnd())
+                        appointment -> appointment.getStart().isEqual(result.getStart())
+                                || appointment.getEnd().isEqual(result.getEnd())
+                                || appointment.getStart().isBefore(result.getStart())
+                                || appointment.getEnd().isBefore(result.getEnd())
                 );
     }
 

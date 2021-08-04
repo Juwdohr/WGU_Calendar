@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,6 +122,20 @@ public class Calendar {
      * Uses a Lambda function in the consumer, that is passed to the
      * AppointmentDetails Controller. (Justification for Lambda ???)
      */
+    @FXML
+    private Button reportsButton;
+
+    @FXML
+    void showReports() throws IOException {
+        Stage newStage = new Stage();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../Views/Reports.fxml")));
+        newStage.setScene(new Scene(root));
+        newStage.setResizable(false);
+        newStage.setTitle(MESSAGES.getString("Title") + " : Reports");
+        newStage.initStyle(StageStyle.DECORATED);
+        newStage.show();
+    }
+
     @FXML
     void addAppointment() throws IOException {
         FXMLLoader loader = new FXMLLoader();

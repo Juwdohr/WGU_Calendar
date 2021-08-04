@@ -12,10 +12,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
@@ -82,8 +79,46 @@ public class AppointmentDetails {
     @FXML
     private Button cancelAppointment;
 
+    /**
+     * Initializes the Appointment Details Screen.
+     * Initializes the Date & Time Pickers, and ComboBoxes.
+     */
     @FXML
     void initialize() {
+        initializeDatePickers();
+        initializeComboBoxes();
+        startTimePickerInit();
+        endTimePickerInit();
+    }
+
+    /**
+     * Intializes the Datepickers.
+     */
+    private void initializeDatePickers() {
+        startDatePicker.setValue(datePickerInitialDate());
+        startDatePicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.SATURDAY);
+            }
+        });
+        startDatePicker.setEditable(false);
+        endDatePicker.setValue(datePickerInitialDate());
+        endDatePicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.SATURDAY);
+            }
+        });
+        endDatePicker.setEditable(false);
+    }
+
+    /**
+     * Initializes the Contact ComboBox & Customer ComboBox.
+     */
+    private void initializeComboBoxes() {
         contactComboBox.setItems(contacts);
         contactComboBox.setCellFactory(new Callback<>() {
             @Override
@@ -145,10 +180,31 @@ public class AppointmentDetails {
                 }
             }
         });
+    }
 
-        startDatePicker.setValue(LocalDate.now());
-        endDatePicker.setValue(LocalDate.now());
+    /**
+     * Checks the current time, if after
+     * 22:00 then returns the next day.
+     * @return LocalDate of either today or the next.
+     */
+    private LocalDate datePickerInitialDate() {
+        if(LocalTime.now().isAfter(LocalTime.of(22, 0)))
+            switch (LocalDate.now().plusDays(1).getDayOfWeek()){
+                case SATURDAY:
+                    return LocalDate.now().plusDays(3);
+                case SUNDAY:
+                    return LocalDate.now().plusDays(2);
+                default:
+                    return LocalDate.now().plusDays(1);
+            }
+        return LocalDate.now();
 
+    }
+
+    /**
+     * Initializes the Start Time ComboBox.
+     */
+    private void startTimePickerInit() {
         startTimePicker.setItems(startTimeList);
         startTimePicker.setCellFactory(new Callback<>() {
             @Override
@@ -179,7 +235,12 @@ public class AppointmentDetails {
                 }
             }
         });
+    }
 
+    /**
+     * Initializes the End Time ComboBox.
+     */
+    private void endTimePickerInit() {
         endTimePicker.setItems(endTimeList);
         endTimePicker.setCellFactory(new Callback<>() {
             @Override
@@ -210,9 +271,14 @@ public class AppointmentDetails {
                 }
             }
         });
-
     }
 
+    /**
+     * Initializes Data coming from the Calendar Controller.
+     * @param appointment Appointment to be updated, if present.
+     * @param customers List of customers to add to appointment.
+     * @param onComplete Consumer to return the new/updated appointment.
+     */
     public void initializeData(Appointment appointment, ObservableList<Customer> customers, Consumer<Appointment> onComplete){
         this.onComplete = onComplete;
         this.customers.addAll(customers);
@@ -223,11 +289,17 @@ public class AppointmentDetails {
         loadAppointment(appointment);
     }
 
+    /**
+     * Retrieves Contacts from Database,
+     */
     private void loadContacts() {
         ContactDao contactDao = new ContactDao();
         contacts.addAll(contactDao.getAll());
     }
 
+    /**
+     * Creates start and end times in EST then converts back to System Default Time.
+     */
     private void loadStartEndTimes() {
         int[] quarterHours =  {0, 15, 30, 45, 0};
 
@@ -236,19 +308,23 @@ public class AppointmentDetails {
                 startTimeList.add(LocalDateTime.of(
                         LocalDate.now(),
                         LocalTime.of(i, quarterHours[j])
-                ).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime());
+                ).atZone(ZoneId.of("America/New_York")).withZoneSameInstant(ZoneId.systemDefault()).toLocalTime());
                 endTimeList.add(LocalDateTime.of(
                         LocalDate.now(),
                         LocalTime.of(i, quarterHours[j])
-                ).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime());
+                ).atZone(ZoneId.of("America/New_York")).withZoneSameInstant(ZoneId.systemDefault()).toLocalTime());
             }
         }
         endTimeList.add(LocalDateTime.of(
                 LocalDate.now(),
                 LocalTime.of(22,0)
-        ).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalTime());
+        ).atZone(ZoneId.of("America/New_York")).withZoneSameInstant(ZoneId.systemDefault()).toLocalTime());
     }
 
+    /**
+     * Sets the initial appointment times to the next quarter increment.
+     * Maybe overridden by an incoming appointment to be updated.
+     */
     private void setNewAppointmentTimes() {
         LocalTime current = LocalTime.now();
         startTimePicker.getSelectionModel().select(0);
@@ -262,6 +338,9 @@ public class AppointmentDetails {
         }
     }
 
+    /**
+     * Loads the appointment passed in from the Calendar Controller.
+     */
     private void loadAppointment(Appointment appointment) {
         if(appointment == null) return;
         // Set Current Details
@@ -284,6 +363,10 @@ public class AppointmentDetails {
         endTimePicker.getSelectionModel().select(appointment.getEnd().toLocalTime());
     }
 
+    /**
+     * Checks to see if the user wants to cancel the current action.
+     * If true closes current screen, otherwise returns to screen.
+     */
     @FXML
     void cancel() {
         if(Alerts.confirmation(Alerts.ConfirmType.CANCEL)) {
@@ -292,6 +375,10 @@ public class AppointmentDetails {
         }
     }
 
+    /**
+     * Passes back the appointment, to Calendar controller to be add-
+     * ed to the Database, then closes the window.
+     */
     @FXML
     void submit() {
         onComplete.accept(extractAppointmentDetails());
@@ -300,6 +387,11 @@ public class AppointmentDetails {
         stage.close();
     }
 
+    /**
+     * Extracts the appointment details from the window,
+     * and either updates the Existing Appointment or creates a new Appointment Object.
+     * @return Appointment Object to be added to the calendar.
+     */
     private Appointment extractAppointmentDetails() {
         if(appointment == null) appointment = new Appointment();
 

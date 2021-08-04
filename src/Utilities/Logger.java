@@ -6,12 +6,11 @@ import java.io.IOException;
 import java.util.logging.LogManager;
 
 /**
- * Class to creact Logger
+ * Class to create Logger
  */
 public class Logger {
     /**
      * Initializes Log Manager from logging.properties
-     * @throws IOException
      */
     public static void initializeLogManager() throws IOException {
         LogManager.getLogManager().readConfiguration(new FileInputStream("./src/Resource/logging.properties"));

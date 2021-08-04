@@ -11,14 +11,13 @@ import java.sql.Statement;
 import java.util.Optional;
 
 /**
- * DOA implemntation for First Level Divisions (States/Provinces).
+ * DOA implementation for First Level Divisions (States/Provinces).
  */
 public class DivisionsDao implements DAO<Division>{
     /**
      * Extracts Division Object from results.
      * @param results Results containing Division Data.
      * @return Division object to be used.
-     * @throws SQLException
      */
     private Division extractFromResults(ResultSet results) throws SQLException {
         return new Division(
@@ -31,7 +30,7 @@ public class DivisionsDao implements DAO<Division>{
     /**
      * Retrieves single Division, based on ID.
      * @param id ID of Division to retrieve.
-     * @return
+     * @return Optional Division.
      */
     @Override
     public Optional<Division> get(int id) {

@@ -18,7 +18,6 @@ public class Main extends Application {
     /**
      * Starts the Calendar Application.
      * @param primaryStage primary stage to start the Application.
-     * @throws Exception
      */
     @Override
     public void start(Stage primaryStage) throws Exception{

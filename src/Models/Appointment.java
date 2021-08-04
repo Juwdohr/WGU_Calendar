@@ -40,9 +40,9 @@ public class Appointment {
      * @param type Type of appointment.
      * @param start Start LocalDateTime of the Appointment.
      * @param end End LocalDateTime of the appointment.
-     * @param created Date & Time the appointment was created.
+     * @param created Date and Time the appointment was created.
      * @param createdBy User who Created the appointment.
-     * @param lastUpdate Date & Time the appointment was last updated.
+     * @param lastUpdate Date and Time the appointment was last updated.
      * @param lastUpdateBy User who last updated the appointment.
      * @param customerId ID of Customer who is to attend appointment.
      * @param customer Customer Name of who is to attend the appointment
@@ -156,7 +156,7 @@ public class Appointment {
     }
 
     /**
-     * Retrieves the start date & time of the appointment.
+     * Retrieves the start date and time of the appointment.
      * @return Start LocalDateTime of the appointment.
      */
     public LocalDateTime getStart() {
@@ -172,7 +172,7 @@ public class Appointment {
     }
 
     /**
-     * Retrieves the end date & time of the appointment.
+     * Retrieves the end date and time of the appointment.
      * @return Start LocalDateTime of the appointment.
      */
     public LocalDateTime getEnd() {
@@ -188,15 +188,15 @@ public class Appointment {
     }
 
     /**
-     * Retrieves the Date & Time the appointment was created.
-     * @return Date & Time that the appointment was created.
+     * Retrieves the Date and Time the appointment was created.
+     * @return Date and Time that the appointment was created.
      */
     public LocalDateTime getCreated() {
         return created;
     }
 
     /**
-     * Sets the Date & Time the appointment is created at.
+     * Sets the Date and Time the appointment is created at.
      * @param created LocalDateTime appointment is created at.
      */
     public void setCreated(LocalDateTime created) {
@@ -221,7 +221,7 @@ public class Appointment {
 
     /**
      * Retrieves the last time the appointment was updated.
-     * @return Date & Time the appointment was updated.
+     * @return Date and Time the appointment was updated.
      */
     public LocalDateTime getLastUpdate() {
         return lastUpdate;
@@ -229,7 +229,7 @@ public class Appointment {
 
     /**
      * Sets the last time the appointment was updated.
-     * @param lastUpdate Date & Time the appointment was updated.
+     * @param lastUpdate Date and Time the appointment was updated.
      */
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;

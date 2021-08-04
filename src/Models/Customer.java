@@ -16,11 +16,11 @@ public class Customer {
     private String postalCode;
     /** Phone number of Customer. */
     private String phone;
-    /** Date & time Customer was created. */
+    /** Date and time Customer was created. */
     private LocalDateTime created;
     /** Who created the Customer. */
     private String createdBy;
-    /** Last date & time the Customer was updated. */
+    /** Last date and time the Customer was updated. */
     private LocalDateTime lastUpdated;
     /** Who last updated the Customer. */
     private String lastUpdatedBy;
@@ -90,7 +90,7 @@ public class Customer {
 
     /**
      * Retrieves name of Customer.
-     * @return
+     * @return Customer name.
      */
     public String getName() {
         return name;
@@ -153,7 +153,7 @@ public class Customer {
     }
 
     /**
-     * Retrieves the Date & Time that Customer was last updated.
+     * Retrieves the Date and Time that Customer was last updated.
      * @return The LocalDateTime the customer was last updated.
      */
     public LocalDateTime getLastUpdated() {
@@ -169,7 +169,7 @@ public class Customer {
     }
 
     /**
-     * Retrieves the date & time the customer was created.
+     * Retrieves the date and time the customer was created.
      * @return LocalDateTime of the creation of the customer.
      */
     public LocalDateTime getCreated() {
@@ -242,7 +242,7 @@ public class Customer {
 
     /**
      * Sets the division name of where the customer lives.
-     * @param division
+     * @param division Division name.
      */
     public void setDivision(String division) {
         this.division = division;

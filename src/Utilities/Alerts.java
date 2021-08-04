@@ -64,7 +64,7 @@ public class Alerts {
 
     /**
      * Alert to let user know of an error.
-     * @param errorMessage
+     * @param errorMessage Message to display to user.
      */
     public static void error(String errorMessage) {
         alert = new Alert(Alert.AlertType.ERROR);

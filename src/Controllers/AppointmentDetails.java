@@ -3,8 +3,11 @@ package Controllers;
 import Models.Appointment;
 import Models.Contact;
 import Models.Customer;
+import Models.User;
 import Utilities.Alerts;
 import Utilities.Database.ContactDao;
+import Utilities.Database.UserDao;
+import com.mysql.cj.x.protobuf.MysqlxExpect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,6 +37,9 @@ public class AppointmentDetails {
     /** ObservableList to hold all contacts from the database. */
     private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
+    /**ObservableList to hold all users from the database. */
+    private final ObservableList<User> users = FXCollections.observableArrayList();
+
     /** ObservableList to hold all start times. */
     private final ObservableList<LocalTime> startTimeList = FXCollections.observableArrayList();
 
@@ -42,6 +48,9 @@ public class AppointmentDetails {
 
     /** Time formatter to standard time format. */
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+
+    @FXML
+    private TextField appointmentIdTextField;
 
     @FXML
     private TextField appointmentTitleTextField;
@@ -57,6 +66,9 @@ public class AppointmentDetails {
 
     @FXML
     private ComboBox<Customer> customerComboBox;
+
+    @FXML
+    private ComboBox<User> userComboBox;
 
     @FXML
     private DatePicker startDatePicker;
@@ -92,7 +104,7 @@ public class AppointmentDetails {
     }
 
     /**
-     * Intializes the Datepickers.
+     * Initializes the DatePickers.
      */
     private void initializeDatePickers() {
         startDatePicker.setValue(datePickerInitialDate());
@@ -153,7 +165,7 @@ public class AppointmentDetails {
         customerComboBox.setItems(customers);
         customerComboBox.setCellFactory(new Callback<>() {
             @Override
-            public ListCell<Customer> call(ListView<Customer> contactListView) {
+            public ListCell<Customer> call(ListView<Customer> customerListView) {
                 return new ListCell<>() {
                     @Override
                     protected void updateItem(Customer item, boolean empty) {
@@ -177,6 +189,37 @@ public class AppointmentDetails {
                     setText(null);
                 } else {
                     setText(item.getName());
+                }
+            }
+        });
+
+        userComboBox.setItems(users);
+        userComboBox.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<User> call(ListView<User> userListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(User item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if(item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item.getUsername());
+                        }
+                    }
+                };
+            }
+        });
+        userComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(User item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item.getUsername());
                 }
             }
         });
@@ -284,18 +327,28 @@ public class AppointmentDetails {
         this.customers.addAll(customers);
 
         loadContacts();
+        loadUsers();
         loadStartEndTimes();
         setNewAppointmentTimes();
         loadAppointment(appointment);
     }
 
     /**
-     * Retrieves Contacts from Database,
+     * Retrieves all Contacts from Database.
      */
     private void loadContacts() {
         ContactDao contactDao = new ContactDao();
         contacts.addAll(contactDao.getAll());
     }
+
+    /**
+     * Retrieves all Users from Database.
+     */
+    private void loadUsers() {
+        UserDao userDao = new UserDao();
+        users.addAll(userDao.getAll());
+    }
+
 
     /**
      * Creates start and end times in EST then converts back to System Default Time.
@@ -343,15 +396,19 @@ public class AppointmentDetails {
      */
     private void loadAppointment(Appointment appointment) {
         if(appointment == null) return;
+        this.appointment = appointment;
+
         // Set Current Details
+        appointmentIdTextField.setText(String.valueOf(appointment.getId()));
         appointmentTitleTextField.setText(appointment.getTitle());
-        appointmentLocationTextField.setText(appointment.getDescription());
+        appointmentLocationTextField.setText(appointment.getLocation());
         appointmentTypeTextField.setText(appointment.getType());
         appointmentDescriptionTextArea.setText(appointment.getDescription());
 
         // Set Current Attendees
-         contactComboBox.getSelectionModel().select(contacts.stream().filter(contact -> contact.getId() == appointment.getContactId()).findAny().orElse(null));
-         customerComboBox.getSelectionModel().select(customers.stream().filter(customer -> customer.getId() == appointment.getCustomerId()).findAny().orElse(null));
+        contactComboBox.getSelectionModel().select(contacts.stream().filter(contact -> contact.getId() == appointment.getContactId()).findAny().orElse(null));
+        customerComboBox.getSelectionModel().select(customers.stream().filter(customer -> customer.getId() == appointment.getCustomerId()).findAny().orElse(null));
+        userComboBox.getSelectionModel().select(users.stream().filter(user -> user.getId() == appointment.getUserId()).findAny().orElse(null));
 
         // Set current Date/Time Selectors
         // Start
@@ -376,8 +433,8 @@ public class AppointmentDetails {
     }
 
     /**
-     * Passes back the appointment, to Calendar controller to be add-
-     * ed to the Database, then closes the window.
+     * Passes back the appointment, to Calendar controller to be added
+     * to the Database, then closes the window.
      */
     @FXML
     void submit() {
@@ -410,6 +467,8 @@ public class AppointmentDetails {
         appointment.setCustomer(customerComboBox.getSelectionModel().getSelectedItem().getName());
         appointment.setContactId(contactComboBox.getSelectionModel().getSelectedItem().getId());
         appointment.setContact(contactComboBox.getSelectionModel().getSelectedItem().getName());
+        appointment.setUserId(userComboBox.getSelectionModel().getSelectedItem().getId());
+        appointment.setUser(userComboBox.getSelectionModel().getSelectedItem().getUsername());
 
         // Set Appointment Creation and Updated values.
         if(appointment.getCreated() == null)

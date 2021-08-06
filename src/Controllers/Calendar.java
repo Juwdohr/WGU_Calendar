@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Calendar Controller.
@@ -128,10 +129,10 @@ public class Calendar {
     @FXML
     void showReports() throws IOException {
         Stage newStage = new Stage();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../Views/Reports.fxml")));
+        Parent root = FXMLLoader.load(getClass().getResource("../Views/Reports.fxml"));
         newStage.setScene(new Scene(root));
         newStage.setResizable(false);
-        newStage.setTitle(MESSAGES.getString("Title") + " : Reports");
+        newStage.setTitle("Calendar: Reports");
         newStage.initStyle(StageStyle.DECORATED);
         newStage.show();
     }
@@ -146,7 +147,6 @@ public class Calendar {
         Consumer<Appointment> onComplete = result -> {
             if(isConflict(result)){
                 Alerts.information("Unable to create appointment.\nCustomer has a scheduling conflict.\nPlease try rescheduling.");
-                System.out.println("Appointment has a conflict canceling appointment creation.");
                 return;
             }
 
@@ -212,7 +212,7 @@ public class Calendar {
      * If all checks pass, appointment is removed from on screen table.
      */
     @FXML
-    void deleteAppointment() {
+    void deleteAppointment()  {
         if(!Alerts.confirmation(Alerts.ConfirmType.DELETE))
             return;
 
@@ -311,7 +311,11 @@ public class Calendar {
             return;
         }
         Consumer<Appointment> onComplete = result -> {
-            result.setCreatedBy(user.getUsername());
+            if(isConflict(result)){
+                Alerts.information("Unable to update appointment.\nCustomer has a scheduling conflict.\nPlease try rescheduling.");
+                return;
+            }
+
             result.setLastUpdateBy(user.getUsername());
             if(appointmentDao.update(result)) {
                 appointments.set(appointments.indexOf(appointment), result);
@@ -400,8 +404,13 @@ public class Calendar {
         loadCustomers();
         loadAppointments();
 
-        if(hasUpcomingAppointment()) {
-            Alerts.information("You have a meeting coming up in the next 15 minutes.");
+        Appointment upcomingAppointment = hasUpcomingAppointment();
+        if(upcomingAppointment.getId() != -1) {
+            Alerts.information("You have a meeting coming up in the next 15 minutes.\n"
+                    + upcomingAppointment.getId() + ", "
+                    + upcomingAppointment.getStart().format(dateTimeFormat) + ".");
+        } else {
+            Alerts.information("You have no upcoming meetings.");
         }
     }
 
@@ -409,13 +418,14 @@ public class Calendar {
      * Checks to see if there is an upcoming appointment within the next 15 minutes.
      * @lambda filter Filters the Appointments, for User ID and current date.
      * @lambda anyMatch checks the filtered appointments against the current time plus 15 minutes.
-     * @return {@code true} if there is an appointment within the next 15 minutes,
-     * otherwise {@code false}.
+     * @return first appointment that is with 15 minutes, or a new blank appointment.
      */
-    private boolean hasUpcomingAppointment() {
-        return appointments.stream()
+    private Appointment hasUpcomingAppointment() {
+        return (appointments.stream()
                 .filter(appointment -> appointment.getUserId() == user.getId() && appointment.getStart().toLocalDate().isEqual(LocalDate.now()))
-                .anyMatch(appointment -> appointment.getStart().toLocalTime().isBefore(LocalTime.now().plusMinutes(15)));
+                .collect(Collectors.toList()).stream().filter(
+                        appointment -> appointment.getStart().toLocalTime().isBefore(LocalTime.now().plusMinutes(15))
+                ).findFirst()).orElseGet(() -> new Appointment());
     }
 
     /**

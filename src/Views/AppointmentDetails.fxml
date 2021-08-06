@@ -49,7 +49,12 @@
                   <ComboBox fx:id="endTimePicker" prefWidth="165.0" promptText="End Time" />
                </children>
             </HBox>
-            <Label fx:id="appointmentDescriptionLabel" text="Appointment Description:" />
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label fx:id="appointmentDescriptionLabel" prefHeight="25.0" prefWidth="165.0" text="Appointment Description:" />
+                  <ComboBox fx:id="userComboBox" prefWidth="165.0" promptText="Select User" />
+               </children>
+            </HBox>
             <TextArea fx:id="appointmentDescriptionTextArea" prefHeight="200.0" prefWidth="280.0" />
             <ButtonBar prefHeight="25.0" prefWidth="280.0">
                <buttons>

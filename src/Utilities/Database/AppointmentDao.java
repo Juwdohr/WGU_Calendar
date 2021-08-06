@@ -145,9 +145,9 @@ public class AppointmentDao implements DAO<Appointment>{
             statement.setString(8, appointment.getCreatedBy());
             statement.setTimestamp(9, Timestamp.valueOf(appointment.getLastUpdate()));
             statement.setString(10, appointment.getLastUpdateBy());
-            statement.setString(11, String.valueOf(appointment.getCustomer()));
-            statement.setString(12, String.valueOf(appointment.getContact()));
-            statement.setString(13, String.valueOf(appointment.getUser()));
+            statement.setString(11, String.valueOf(appointment.getCustomerId()));
+            statement.setString(12, String.valueOf(appointment.getContactId()));
+            statement.setString(13, String.valueOf(appointment.getUserId()));
             statement.setString(14, String.valueOf(appointment.getId()));
             int result = statement.executeUpdate();
 

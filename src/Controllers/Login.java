@@ -35,7 +35,6 @@ public class Login {
     private final static Locale CURRENT_LOCALE = Locale.getDefault();
     /** Logger for application. */
     private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
-
     /** Resource Bundle for internationalization. */
     private final static ResourceBundle MESSAGES = ResourceBundle.getBundle("Resource/MessageBundle", CURRENT_LOCALE);
 
@@ -71,13 +70,13 @@ public class Login {
 
     /**
      * Logs in user and switches to the Calendar view.
-     * @throws IOException
      */
     @FXML
     void LoginUser() throws IOException {
         try {
             User user = getUser(usernameTextField.getText(), passwordTextField.getText());
-            LOGGER.log(Level.INFO, user.getUsername() + " logged in successfully");
+            LOGGER.log(Level.INFO, "User: " + user.getUsername() + " was able to successfully login.");
+
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("../Views/Calendar.fxml"));
             Parent newRoot = loader.load();
@@ -97,7 +96,7 @@ public class Login {
 
             newStage.show();
         } catch (NoSuchElementException ex) {
-            LOGGER.log(Level.INFO, usernameTextField.getText() + " attempted to login.");
+            LOGGER.log(Level.WARNING, "User: " + usernameTextField.getText() + " was unable to successfully login.");
             errorMessageTxt.setText(MESSAGES.getString("LoginError"));
         }
 
@@ -115,6 +114,8 @@ public class Login {
         usernameTextField.setPromptText(MESSAGES.getString("UsernamePrompt"));
         passwordTextField.setPromptText(MESSAGES.getString("PasswordPrompt"));
         zoneIdLbl.setText(ZoneId.systemDefault().toString());
+        loginBtn.setText(MESSAGES.getString("Login"));
+        closeBtn.setText("Exit");
 
         /** Allows a user press the enter key on the Username TextField to log in to application. */
         usernameTextField.addEventHandler(KeyEvent.KEY_PRESSED, ev-> {

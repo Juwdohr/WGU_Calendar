@@ -45,7 +45,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="802.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Calendar">
+<AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="586.0" prefWidth="802.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Calendar">
    <children>
       <Label fx:id="usernameLbl" text="[username]" textFill="#9f9f9f" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
          <font>
@@ -87,7 +87,7 @@
             <Button fx:id="reportsButton" mnemonicParsing="false" onMouseClicked="#showReports" text="Reports" />
          </buttons>
       </ButtonBar>
-      <VBox layoutX="22.0" layoutY="78.0" spacing="14.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="100.0">
+      <VBox alignment="TOP_RIGHT" layoutX="22.0" layoutY="78.0" spacing="14.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="100.0">
          <children>
             <TableView fx:id="appointmentTableView" prefHeight="208.5">
                <columns>
@@ -96,15 +96,20 @@
                   <TableColumn fx:id="appointmentDescription" prefWidth="105.0" text="Description" />
                   <TableColumn fx:id="appointmentLocation" prefWidth="105.0" text="Location" />
                   <TableColumn fx:id="appointmentContact" prefWidth="125.0" text="Contact" />
+                  <TableColumn fx:id="appointmentCustomerId" minWidth="0.0" text="Customer ID" />
                   <TableColumn fx:id="appointmentType" prefWidth="100.0" text="Type" />
                   <TableColumn fx:id="appointmentStartDateTime" prefWidth="125.0" text="Start Date &amp; Time" />
                   <TableColumn fx:id="appointmentEndDateTime" prefWidth="125.0" text="End Date &amp; Time" />
-                  <TableColumn fx:id="appointmentCustomerId" minWidth="0.0" text="Customer ID" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
+            <Label text="Customers">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
             <TableView fx:id="customerTableView" fixedCellSize="0.0" prefHeight="208.5">
                <columns>
                   <TableColumn fx:id="customerIdTableColumn" prefWidth="25.0" text="ID" />
@@ -121,5 +126,10 @@
             </TableView>
          </children>
       </VBox>
+      <Label layoutX="664.0" layoutY="58.0" text="Appointments">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

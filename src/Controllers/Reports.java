@@ -19,6 +19,9 @@ import java.time.Year;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Reports Controller
+ */
 public class Reports {
 
     @FXML
@@ -72,20 +75,35 @@ public class Reports {
     @FXML
     private TableColumn<Report, Integer> appointmentsByYearTotalColumn;
 
+    /** DateTimeFormat helps format DateTime objects to MM/dd/yyyy h:mm a z (12/25/1991 10:30 AM EDT). */
     private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a z");
+    /** Appointments holds all appointments retrieved from Database. */
     private final ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+    /** Filtered Appointments holds currently displayed appointments. */
     private final FilteredList<Appointment> filteredAppointments = new FilteredList<>(appointments);
+    /** Contacts holds all contacts retrieved from Database. */
     private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
-    private final ObservableList typeMonthReport = FXCollections.observableArrayList();
-    private final ObservableList contactYearReport = FXCollections.observableArrayList();
+    /** TypeMonthReport holds all reports for the month to type report. */
+    private final ObservableList<Report> typeMonthReport = FXCollections.observableArrayList();
+    /** ContactYearReport holds all reports for the contact to year report */
+    private final ObservableList<Report> contactYearReport = FXCollections.observableArrayList();
+    /** Appointment DAO object to retrieve appointments, and reports. */
     private final AppointmentDao appointmentDao = new AppointmentDao();
 
+    /**
+     * Selects the appointments of the selected Contact to display their schedule.
+     * @lambda Predicate Used to Quickly Select the corresponding appointments to
+     * the contact, using the appointments ContactID.
+     */
     @FXML
     void selectContactSchedule() {
         Contact selected = contactComboBox.getSelectionModel().getSelectedItem();
         if(selected != null) filteredAppointments.setPredicate(appointment -> appointment.getContactId() == selected.getId());
     }
 
+    /**
+     * Initializes the Reports window.
+     */
     @FXML
     void initialize() {
         initializeContacts();
@@ -104,11 +122,18 @@ public class Reports {
         contactYearColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         appointmentsByYearTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
     }
+
+    /**
+     * Retrieves all contacts from the Database.
+     */
     private void initializeContacts() {
         ContactDao contactDao = new ContactDao();
         contacts.addAll(contactDao.getAll());
     }
 
+    /**
+     * Initializes the Appointments Table.
+     */
     private void initializeAppointments() {
         appointments.addAll(appointmentDao.getAll());
         scheduleTable.setItems(filteredAppointments);
@@ -155,6 +180,9 @@ public class Reports {
         customerColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
     }
 
+    /**
+     * Initializes the Contact Combo Box.
+     */
     private void initializeContactComboBox() {
         contactComboBox.setItems(contacts);
         contactComboBox.setCellFactory(new Callback<>() {
@@ -190,10 +218,16 @@ public class Reports {
         selectContactSchedule();
     }
 
+    /**
+     * Retrieves the type to month reports.
+     */
     private void initializeTypeMonthReport() {
         typeMonthReport.addAll(appointmentDao.generateTypeMonthReport());
     }
 
+    /**
+     * Retrieves the contact to year reports.
+     */
     private void initializeContactYearReport() {
         contactYearReport.addAll(appointmentDao.generateContactYearReport());
     }

@@ -13,10 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Year;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -98,7 +95,7 @@ public class Reports {
     @FXML
     void selectContactSchedule() {
         Contact selected = contactComboBox.getSelectionModel().getSelectedItem();
-        if(selected != null) filteredAppointments.setPredicate(appointment -> appointment.getContactId() == selected.getId());
+        if(selected != null) filteredAppointments.setPredicate(appointment -> appointment.getContactId() == selected.getId() && appointment.getStart().toLocalDate().isEqual(LocalDate.now()));
     }
 
     /**

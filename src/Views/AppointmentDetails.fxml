@@ -39,8 +39,8 @@
             <ComboBox fx:id="customerComboBox" prefHeight="25.0" prefWidth="337.0" promptText="Select Customer" />
             <HBox prefHeight="25.0" prefWidth="280.0" spacing="10.0">
                <children>
-                  <DatePicker fx:id="startDatePicker" prefWidth="165.0" promptText="Start Date" />
-                  <DatePicker fx:id="endDatePicker" prefWidth="165.0" promptText="End Date" />
+                  <ComboBox fx:id="userComboBox" prefHeight="25.0" prefWidth="165.0" promptText="Select User" />
+                  <DatePicker fx:id="appointmentDatePicker" prefWidth="165.0" promptText="Date" />
                </children>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="280.0" spacing="10.0">
@@ -52,7 +52,6 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label fx:id="appointmentDescriptionLabel" prefHeight="25.0" prefWidth="165.0" text="Appointment Description:" />
-                  <ComboBox fx:id="userComboBox" prefWidth="165.0" promptText="Select User" />
                </children>
             </HBox>
             <TextArea fx:id="appointmentDescriptionTextArea" prefHeight="200.0" prefWidth="280.0" />

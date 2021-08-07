@@ -40,8 +40,6 @@ public class Calendar {
     private final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     /** DateTimeFormatter to format Date & Time to MM/dd/yyyy h:mm a z */
     private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a z");
-    /** Creates a Logger object for this class. */
-    private final static Logger LOGGER = Logger.getLogger(Calendar.class.getName());
     /** List of Customers retrieved from database. */
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
     /** List of Appointments retrieved from database. */
@@ -307,7 +305,6 @@ public class Calendar {
         Appointment appointment = appointmentTableView.getSelectionModel().getSelectedItem();
         if(appointment == null) {
             Alerts.information("Appointment must be selected.\nPlease select an appointment.");
-            LOGGER.log(Level.INFO, "Appointment not selected. Appointment must be selected.");
             return;
         }
         Consumer<Appointment> onComplete = result -> {
@@ -348,7 +345,6 @@ public class Calendar {
         Customer customer = customerTableView.getSelectionModel().getSelectedItem();
         if(customer == null) {
             Alerts.information("Customer must be selected.\nPlease select to a Customer from the Customer Table.");
-            LOGGER.log(Level.INFO, "Customer not selected. Customer must be selected.");
             return;
         }
 
@@ -509,7 +505,7 @@ public class Calendar {
                 .filter(appointment -> appointment.getCustomerId() == result.getCustomerId() && (
                         appointment.getStart().toLocalDate().equals(result.getStart().toLocalDate()) ||
                                 appointment.getEnd().toLocalDate().equals(result.getEnd().toLocalDate())
-                        )
+                        ) && (appointment.getId() != result.getId())
                 )
                 .anyMatch(
                         appointment -> appointment.getStart().isEqual(result.getStart())

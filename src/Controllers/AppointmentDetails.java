@@ -71,10 +71,7 @@ public class AppointmentDetails {
     private ComboBox<User> userComboBox;
 
     @FXML
-    private DatePicker startDatePicker;
-
-    @FXML
-    private DatePicker endDatePicker;
+    private DatePicker appointmentDatePicker;
 
     @FXML
     private ComboBox<LocalTime> startTimePicker;
@@ -107,24 +104,15 @@ public class AppointmentDetails {
      * Initializes the DatePickers.
      */
     private void initializeDatePickers() {
-        startDatePicker.setValue(datePickerInitialDate());
-        startDatePicker.setDayCellFactory(picker -> new DateCell() {
+        appointmentDatePicker.setValue(datePickerInitialDate());
+        appointmentDatePicker.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 setDisable(empty || date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.SATURDAY);
             }
         });
-        startDatePicker.setEditable(false);
-        endDatePicker.setValue(datePickerInitialDate());
-        endDatePicker.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.SATURDAY);
-            }
-        });
-        endDatePicker.setEditable(false);
+        appointmentDatePicker.setEditable(false);
     }
 
     /**
@@ -349,7 +337,6 @@ public class AppointmentDetails {
         users.addAll(userDao.getAll());
     }
 
-
     /**
      * Creates start and end times in EST then converts back to System Default Time.
      */
@@ -412,11 +399,8 @@ public class AppointmentDetails {
 
         // Set current Date/Time Selectors
         // Start
-        startDatePicker.setValue(appointment.getStart().toLocalDate());
+        appointmentDatePicker.setValue(appointment.getStart().toLocalDate());
         startTimePicker.getSelectionModel().select(appointment.getStart().toLocalTime());
-
-        // End
-        endDatePicker.setValue(appointment.getEnd().toLocalDate());
         endTimePicker.getSelectionModel().select(appointment.getEnd().toLocalTime());
     }
 
@@ -438,10 +422,45 @@ public class AppointmentDetails {
      */
     @FXML
     void submit() {
+        if (!validInput()) return;
+        if(!validTimes()) {
+            Alerts.information("Start time is after end time.\nPlease check the times again.");
+            return;
+        }
+
         onComplete.accept(extractAppointmentDetails());
 
         Stage stage = (Stage) submitAppointment.getScene().getWindow();
         stage.close();
+    }
+
+    /**
+     * Checks to see if the times are valid entries.
+     * @return {@code true} if times are valid, otherwise {@code false}
+     */
+    private boolean validTimes() {
+        return startTimePicker.getSelectionModel().getSelectedItem().isBefore(endTimePicker.getSelectionModel().getSelectedItem());
+    }
+
+    /**
+     * Validates all inputs.
+     * @return {@code true} if inputs have valid data, otherwise {@code false}
+     */
+    private boolean validInput() {
+        if(
+                appointmentTitleTextField.getText().trim() == "" ||
+                appointmentLocationTextField.getText().trim() == "" ||
+                appointmentTypeTextField.getText().trim() == "" ||
+                contactComboBox.getSelectionModel().getSelectedItem() == null ||
+                customerComboBox.getSelectionModel().getSelectedItem() == null ||
+                userComboBox.getSelectionModel().getSelectedItem() == null ||
+                startTimePicker.getSelectionModel().getSelectedItem() == null||
+                endTimePicker.getSelectionModel().getSelectedItem() == null
+        ) {
+            Alerts.information("Appointment is missing some information.\nPlease double check information.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -459,8 +478,8 @@ public class AppointmentDetails {
         appointment.setType(appointmentTypeTextField.getText());
 
         // Set Appointment Times
-        appointment.setStart(LocalDateTime.of(startDatePicker.getValue(), startTimePicker.getSelectionModel().getSelectedItem()));
-        appointment.setEnd(LocalDateTime.of(endDatePicker.getValue(), endTimePicker.getSelectionModel().getSelectedItem()));
+        appointment.setStart(LocalDateTime.of(appointmentDatePicker.getValue(), startTimePicker.getSelectionModel().getSelectedItem()));
+        appointment.setEnd(LocalDateTime.of(appointmentDatePicker.getValue(), endTimePicker.getSelectionModel().getSelectedItem()));
 
         // Set Attendees
         appointment.setCustomerId(customerComboBox.getSelectionModel().getSelectedItem().getId());

@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class DBConnection {
     /** URL of database to connect to. */
-    private static final String URL = "jdbc:mysql://wgudb.ucertify.com:3306/WJ07okc";
+    private static final String URL = "jdbc:mysql://wgudb.ucertify.com:3306/WJ07okc?connectionTimeZone=SERVER";
     /** Username for database connection. */
     private static final String USER = "U07okc";
     /** Password for database connection. */

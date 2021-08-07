@@ -70,7 +70,7 @@ public class Alerts {
         alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(MESSAGES.getString("errorTitle"));
         alert.setContentText(errorMessage);
-        alert.show();
+        alert.showAndWait();
     }
 
     /**
@@ -80,6 +80,6 @@ public class Alerts {
     public static void information(String infoMessage) {
         alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(infoMessage);
-        alert.show();
+        alert.showAndWait();
     }
 }

@@ -25,10 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -38,8 +35,8 @@ public class Calendar {
 
     /** DateTimeFormatter to format the dates to MM/dd/yyyy. */
     private final static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    /** DateTimeFormatter to format Date & Time to MM/dd/yyyy h:mm a z */
-    private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a z");
+    /** DateTimeFormatter to format Date & Time to MM/dd/yyyy h:mm a. */
+    private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
     /** List of Customers retrieved from database. */
     private final ObservableList<Customer> customers = FXCollections.observableArrayList();
     /** List of Appointments retrieved from database. */
@@ -116,14 +113,10 @@ public class Calendar {
     @FXML
     private Label currentDateLbl;
 
-    /**
-     * Adds Appointments to the Appointment table on screen and in the database.
-     * Uses a Lambda function in the consumer, that is passed to the
-     * AppointmentDetails Controller. (Justification for Lambda ???)
-     */
-    @FXML
-    private Button reportsButton;
 
+    /**
+     * Opens the Calendar Reports screen.
+     */
     @FXML
     void showReports() throws IOException {
         Stage newStage = new Stage();
@@ -135,6 +128,11 @@ public class Calendar {
         newStage.show();
     }
 
+    /**
+     * Adds Appointments to the Appointment table on screen and in the database.
+     * Uses a Lambda function in the consumer, that is passed to the
+     * AppointmentDetails Controller. (Justification for Lambda ???)
+     */
     @FXML
     void addAppointment() throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -211,16 +209,12 @@ public class Calendar {
      */
     @FXML
     void deleteAppointment()  {
-        if(!Alerts.confirmation(Alerts.ConfirmType.DELETE))
-            return;
-
         Appointment appointment = appointmentTableView.getSelectionModel().getSelectedItem();
-
         if(appointment == null) {
             Alerts.information("Must select an appointment first.");
             return;
         }
-
+        if(!Alerts.customConfirmation("Delete Appointment?", "Are you sure you want to delete this Appointment?\n Appointment ID: " + appointment.getId() + "; Appointment Type: " + appointment.getType() )) return;
         if(!appointmentDao.delete(appointment.getId())) {
             Alerts.error("Unable to delete Appointment.\nIf issue persists please contact support.");
             return;
@@ -403,8 +397,8 @@ public class Calendar {
         Appointment upcomingAppointment = hasUpcomingAppointment();
         if(upcomingAppointment.getId() != -1) {
             Alerts.information("You have a meeting coming up in the next 15 minutes.\n"
-                    + upcomingAppointment.getId() + ", "
-                    + upcomingAppointment.getStart().format(dateTimeFormat) + ".");
+                    +"Appointment ID:" +upcomingAppointment.getId() + ", Appointment Time:"
+                    + upcomingAppointment.getStart().format(dateTimeFormat));
         } else {
             Alerts.information("You have no upcoming meetings.");
         }
@@ -420,8 +414,9 @@ public class Calendar {
         return (appointments.stream()
                 .filter(appointment -> appointment.getUserId() == user.getId() && appointment.getStart().toLocalDate().isEqual(LocalDate.now()))
                 .collect(Collectors.toList()).stream().filter(
-                        appointment -> appointment.getStart().toLocalTime().isBefore(LocalTime.now().plusMinutes(15))
-                ).findFirst()).orElseGet(() -> new Appointment());
+                        appointment -> appointment.getStart().toLocalTime().isAfter(LocalTime.now())
+                                && appointment.getStart().toLocalTime().isBefore(LocalTime.now().plusMinutes(15))
+                ).findFirst()).orElseGet(Appointment::new);
     }
 
     /**
@@ -502,16 +497,17 @@ public class Calendar {
      */
     private boolean isConflict(Appointment result) {
         return appointments.stream()
-                .filter(appointment -> appointment.getCustomerId() == result.getCustomerId() && (
-                        appointment.getStart().toLocalDate().equals(result.getStart().toLocalDate()) ||
-                                appointment.getEnd().toLocalDate().equals(result.getEnd().toLocalDate())
-                        ) && (appointment.getId() != result.getId())
+                .filter(appointment -> appointment.getCustomerId() == result.getCustomerId()
+                        && (appointment.getStart().toLocalDate().equals(result.getStart().toLocalDate()))
+                        && (appointment.getId() != result.getId())
                 )
                 .anyMatch(
-                        appointment -> appointment.getStart().isEqual(result.getStart())
+                        appointment -> appointment.getStart().isBefore(result.getEnd()) && result.getEnd().isBefore(appointment.getEnd())
+                                || result.getStart().isBefore(appointment.getEnd()) && appointment.getEnd().isBefore(result.getEnd())
+                                || appointment.getStart().isEqual(result.getStart())
                                 || appointment.getEnd().isEqual(result.getEnd())
-                                || appointment.getStart().isBefore(result.getStart())
-                                || appointment.getEnd().isBefore(result.getEnd())
+                                || appointment.getStart().isEqual(result.getEnd())
+                                || appointment.getEnd().isEqual(result.getStart())
                 );
     }
 

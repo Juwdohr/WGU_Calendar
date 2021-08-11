@@ -89,7 +89,7 @@ public class Reports {
 
     /**
      * Selects the appointments of the selected Contact to display their schedule.
-     * @lambda Predicate Used to Quickly Select the corresponding appointments to
+     * @lambda Predicate used to quickly select the corresponding appointments to
      * the contact, using the appointments ContactID.
      */
     @FXML

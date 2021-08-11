@@ -89,7 +89,7 @@
       </ButtonBar>
       <VBox alignment="TOP_RIGHT" layoutX="22.0" layoutY="78.0" spacing="14.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="100.0">
          <children>
-            <TableView fx:id="appointmentTableView" prefHeight="208.5">
+            <TableView fx:id="appointmentTableView" prefHeight="208.5" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="appointmentId" prefWidth="25.0" text="ID" />
                   <TableColumn fx:id="appointmentTitle" prefWidth="61.0" text="Title" />
@@ -110,7 +110,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <TableView fx:id="customerTableView" fixedCellSize="0.0" prefHeight="208.5">
+            <TableView fx:id="customerTableView" fixedCellSize="0.0" prefHeight="208.5" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="customerIdTableColumn" prefWidth="25.0" text="ID" />
                   <TableColumn fx:id="customerNameTableColumn" prefWidth="137.6666717529297" text="Name" />
@@ -126,7 +126,7 @@
             </TableView>
          </children>
       </VBox>
-      <Label layoutX="664.0" layoutY="58.0" text="Appointments">
+      <Label layoutX="664.0" layoutY="58.0" text="Appointments" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="58.0">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

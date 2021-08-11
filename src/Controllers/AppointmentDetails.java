@@ -105,11 +105,16 @@ public class AppointmentDetails {
      */
     private void initializeDatePickers() {
         appointmentDatePicker.setValue(datePickerInitialDate());
-        appointmentDatePicker.setDayCellFactory(picker -> new DateCell() {
+        appointmentDatePicker.setDayCellFactory(new Callback<DatePicker, DateCell>() {
             @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                setDisable(empty || date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.SATURDAY);
+            public DateCell call(DatePicker picker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate date, boolean empty) {
+                        super.updateItem(date, empty);
+                        setDisable(empty);
+                    }
+                };
             }
         });
         appointmentDatePicker.setEditable(false);
